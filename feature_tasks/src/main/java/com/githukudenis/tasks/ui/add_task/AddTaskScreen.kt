@@ -27,6 +27,8 @@ import com.githukudenis.core_data.util.UserMessage
 import com.githukudenis.tasks.R
 import com.githukudenis.tasks.ui.add_task.components.PriorityChip
 import com.githukudenis.tasks.ui.add_task.components.TaskInput
+import com.google.accompanist.permissions.MultiplePermissionsState
+import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.datetime.date.datepicker
 import com.vanpra.composematerialdialogs.datetime.time.timepicker
@@ -34,10 +36,11 @@ import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
+import java.util.*
 
+@OptIn(ExperimentalLifecycleComposeApi::class, ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.O)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalLifecycleComposeApi::class)
 @Composable
 fun AddTaskScreen(
     modifier: Modifier = Modifier,
@@ -47,7 +50,12 @@ fun AddTaskScreen(
 
 ) {
     val context = LocalContext.current
-
+    val permissionState = rememberMultiplePermissionsState(
+        permissions = listOf(
+        android.Manifest.permission.SCHEDULE_EXACT_ALARM,
+        android.Manifest.permission.POST_NOTIFICATIONS
+        )
+    )
     val addTaskViewModel: AddTaskViewModel = hiltViewModel()
     val state = addTaskViewModel.state.collectAsStateWithLifecycle().value
     Column(
@@ -91,6 +99,7 @@ fun AddTaskScreen(
                 addTaskViewModel.onEvent(AddTaskEvent.ChangeTaskPriority(priority = newPriority))
             },
             priorities = state.priorities,
+            multiplePermissionsState = permissionState,
             onSaveTask = { todoEntity ->
                 addTaskViewModel.onEvent(AddTaskEvent.SaveTask(todoEntity))
                 onSaveTask()
@@ -103,17 +112,19 @@ fun AddTaskScreen(
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun AddTaskScreen(
     modifier: Modifier = Modifier,
     priority: Priority,
     onChangePriority: (Priority) -> Unit,
     priorities: List<Priority>,
+    multiplePermissionsState: MultiplePermissionsState,
     onSaveTask: (TaskEntity) -> Unit,
+    onSetReminder: () -> Unit,
     onShowUserMessage: (UserMessage) -> Unit
 ) {
     val context = LocalContext.current
+    val scope = rememberCoroutineScope()
 
     var todoTitle by remember {
         mutableStateOf("")
@@ -253,11 +264,6 @@ private fun AddTaskScreen(
                     val userMessage = UserMessage(message = message)
                     onShowUserMessage(userMessage)
                 } else {
-                    if (reminderEnabled) {
-                        val permissionLauncher = rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestMultiplePermissions()) {
-
-                        }
-                    }
                     val taskEntity = TaskEntity(
                         taskTitle = todoTitle,
                         taskDescription = todoDescription,
@@ -265,7 +271,20 @@ private fun AddTaskScreen(
                         taskDueDate = pickedDate,
                         priority = priority
                     )
-                    onSaveTask(taskEntity)
+                        if (reminderEnabled && multiplePermissionsState.allPermissionsGranted) {
+                            onSaveTask(taskEntity).also {
+                                val calendar = Calendar.getInstance()
+                                calendar.set(
+                                    Calendar.DATE = pickedDate,
+
+                                )
+                                onSetReminder(, String)
+                            }
+                        } else if (reminderEnabled && !multiplePermissionsState.allPermissionsGranted) {
+                            multiplePermissionsState.launchMultiplePermissionRequest()
+                        } else {
+
+                        }
                 }
             }
         ) {

@@ -38,7 +38,7 @@ class AddTaskViewModel @Inject constructor(
             }
 
             is AddTaskEvent.SaveTask -> {
-                saveTask(addTaskEvent.taskEntity)
+                saveTask(addTaskEvent.taskEntity).
             }
 
             is AddTaskEvent.ShowUserMessage -> {

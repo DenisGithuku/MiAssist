@@ -79,6 +79,9 @@ dependencies {
     implementation(Dependencies.coroutines_core)
     implementation(Dependencies.coroutines_android)
 
+    //accompanist permissions
+    implementation(Dependencies.compose_accompanist_permissions)
+
     // navigation
     implementation(Dependencies.compose_navigation)
     implementation(Dependencies.hilt_navigation_compose)
