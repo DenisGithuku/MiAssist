@@ -24,6 +24,8 @@ android {
         }
     }
 
+    tasks.getByName("preBuild").dependsOn("ktlintFormat")
+
     buildTypes {
         getByName("release") {
             isMinifyEnabled = false
@@ -31,11 +33,9 @@ android {
         }
     }
 
-
-
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility =  JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
     }
     kotlinOptions {
         jvmTarget = "1.8"
@@ -60,14 +60,13 @@ configure<org.jlleitschuh.gradle.ktlint.KtlintExtension> {
     outputColorName.set("RED")
     ignoreFailures.set(true)
     enableExperimentalRules.set(true)
-    disabledRules.set(setOf("final-newline"))
+    disabledRules.set(setOf("final-newline", "no-wildcard-imports"))
     reporters {
         reporter(org.jlleitschuh.gradle.ktlint.reporter.ReporterType.SARIF)
         reporter(org.jlleitschuh.gradle.ktlint.reporter.ReporterType.PLAIN)
         reporter(org.jlleitschuh.gradle.ktlint.reporter.ReporterType.CHECKSTYLE)
     }
 }
-
 
 kapt {
     correctErrorTypes = true
@@ -77,7 +76,7 @@ dependencies {
 
     implementation("androidx.core:core-ktx:1.7.0")
 
-    //lifecycle
+    // lifecycle
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.5.1")
     implementation("androidx.lifecycle:lifecycle-common:2.5.1")
     implementation("androidx.lifecycle:lifecycle-viewmodel-savedstate:2.5.1")
@@ -85,33 +84,28 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-savedstate:2.5.1")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.3.1")
 
-
-
-    //navigation
+    // navigation
     implementation("androidx.navigation:navigation-compose:2.5.3")
     implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
 
-    //hilt
+    // hilt
     implementation("androidx.hilt:hilt-work:1.0.0")
     implementation("androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha03")
     kapt("androidx.hilt:hilt-compiler:1.0.0")
     implementation("com.google.dagger:hilt-android:2.44")
     kapt("com.google.dagger:hilt-android-compiler:2.44")
 
-     //datastore prefs
+    // datastore prefs
     implementation("androidx.datastore:datastore-preferences-core:1.0.0")
-
 
     implementation("androidx.savedstate:savedstate-ktx:1.2.0")
 
-     // room
+    // room
     implementation("androidx.room:room-runtime:2.4.3")
     implementation("androidx.room:room-paging:2.4.3")
     kapt("androidx.room:room-compiler:2.4.3")
 
-
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1")
-
 
     implementation("androidx.activity:activity-compose:1.3.1")
     implementation("androidx.compose.ui:ui:1.3.1")
