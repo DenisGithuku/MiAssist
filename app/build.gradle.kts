@@ -77,12 +77,14 @@ dependencies {
     implementation("androidx.core:core-ktx:1.9.0")
 
     // lifecycle
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.5.1")
     implementation("androidx.lifecycle:lifecycle-common:2.5.1")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-savedstate:2.5.1")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1")
     implementation("androidx.lifecycle:lifecycle-viewmodel-savedstate:2.5.1")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.5.1")
+
+    // coroutines
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
 
     // navigation
     implementation("androidx.navigation:navigation-compose:2.5.3")
@@ -121,7 +123,7 @@ dependencies {
     testImplementation("org.robolectric:robolectric:4.9")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
     testImplementation("com.google.truth:truth:1.1.3")
-    testImplementation("org.mockito:mockito-core:2.21.0:1.3.1")
+    testImplementation("org.mockito:mockito-core:2.28.2")
     testImplementation("app.cash.turbine:turbine:0.12.1")
 
     // Instrumented Unit Tests
