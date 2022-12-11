@@ -24,6 +24,8 @@ android {
         }
     }
 
+    tasks.getByName("preBuild").dependsOn("ktlintFormat")
+
     buildTypes {
         getByName("release") {
             isMinifyEnabled = false
@@ -31,11 +33,9 @@ android {
         }
     }
 
-
-
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility =  JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
     }
     kotlinOptions {
         jvmTarget = "1.8"
@@ -60,7 +60,7 @@ configure<org.jlleitschuh.gradle.ktlint.KtlintExtension> {
     outputColorName.set("RED")
     ignoreFailures.set(true)
     enableExperimentalRules.set(true)
-    disabledRules.set(setOf("final-newline"))
+    disabledRules.set(setOf("final-newline", "no-wildcard-imports"))
     reporters {
         reporter(org.jlleitschuh.gradle.ktlint.reporter.ReporterType.SARIF)
         reporter(org.jlleitschuh.gradle.ktlint.reporter.ReporterType.PLAIN)
@@ -68,63 +68,71 @@ configure<org.jlleitschuh.gradle.ktlint.KtlintExtension> {
     }
 }
 
-
 kapt {
     correctErrorTypes = true
 }
 
 dependencies {
 
-    implementation("androidx.core:core-ktx:1.7.0")
+    implementation("androidx.core:core-ktx:1.9.0")
 
-    //lifecycle
+    // lifecycle
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.5.1")
     implementation("androidx.lifecycle:lifecycle-common:2.5.1")
     implementation("androidx.lifecycle:lifecycle-viewmodel-savedstate:2.5.1")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1")
     implementation("androidx.lifecycle:lifecycle-viewmodel-savedstate:2.5.1")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.3.1")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.5.1")
 
-
-
-    //navigation
+    // navigation
     implementation("androidx.navigation:navigation-compose:2.5.3")
     implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
 
-    //hilt
+    // hilt
     implementation("androidx.hilt:hilt-work:1.0.0")
-    implementation("androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha03")
+    testImplementation("junit:junit:4.13.2")
     kapt("androidx.hilt:hilt-compiler:1.0.0")
     implementation("com.google.dagger:hilt-android:2.44")
-    kapt("com.google.dagger:hilt-android-compiler:2.44")
+    kapt("com.google.dagger:hilt-android-compiler:2.44.2")
 
-     //datastore prefs
+    // datastore prefs
     implementation("androidx.datastore:datastore-preferences-core:1.0.0")
-
 
     implementation("androidx.savedstate:savedstate-ktx:1.2.0")
 
-     // room
+    // room
     implementation("androidx.room:room-runtime:2.4.3")
+    implementation("androidx.room:room-ktx:2.4.3")
     implementation("androidx.room:room-paging:2.4.3")
     kapt("androidx.room:room-compiler:2.4.3")
 
-
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1")
 
-
-    implementation("androidx.activity:activity-compose:1.3.1")
+    implementation("androidx.activity:activity-compose:1.6.1")
     implementation("androidx.compose.ui:ui:1.3.1")
     implementation("androidx.compose.ui:ui-tooling-preview:1.3.1")
-    implementation("androidx.compose.material3:material3:1.0.0-alpha11")
+    implementation("androidx.compose.material3:material3:1.1.0-alpha02")
 
-    // local tests
-    testImplementation("androidx.test.ext:truth:1.5.0")
+    // Local Unit Tests
+    implementation("androidx.test:core:1.5.0")
     testImplementation("junit:junit:4.13.2")
+    testImplementation("org.hamcrest:hamcrest-all:1.3")
+    testImplementation("androidx.arch.core:core-testing:2.1.0")
+    testImplementation("org.robolectric:robolectric:4.9")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
+    testImplementation("com.google.truth:truth:1.1.3")
+    testImplementation("org.mockito:mockito-core:2.21.0:1.3.1")
+    testImplementation("app.cash.turbine:turbine:0.12.1")
 
-    // instrumented tests
-    androidTestImplementation("androidx.room:room-testing:2.4.3")
-    androidTestImplementation("androidx.test.ext:truth:1.5.0")
+    // Instrumented Unit Tests
+    androidTestImplementation("junit:junit:4.13.2")
+    androidTestImplementation("com.linkedin.dexmaker:dexmaker-mockito:2.28.3")
+    androidTestImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
+    androidTestImplementation("androidx.arch.core:core-testing:2.1.0")
+    androidTestImplementation("com.google.truth:truth:1.1.3")
+    androidTestImplementation("androidx.test.ext:junit:1.1.4")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.0")
+    androidTestImplementation("org.mockito:mockito-core:2.28.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.4")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.0")
     androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.3.1")
