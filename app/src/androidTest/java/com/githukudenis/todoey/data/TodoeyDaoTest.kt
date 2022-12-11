@@ -125,6 +125,7 @@ class TodoeyDaoTest {
         assertThat(allTodos).hasSize(3)
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun getTodoById() = runTest(StandardTestDispatcher()) {
         val todo1 = TodoEntity(
