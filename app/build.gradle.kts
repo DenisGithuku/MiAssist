@@ -13,7 +13,7 @@ android {
 
     defaultConfig {
         applicationId = "com.githukudenis.todoey"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 33
         versionCode = 1
         versionName = "1.0"
@@ -60,7 +60,7 @@ configure<org.jlleitschuh.gradle.ktlint.KtlintExtension> {
     outputColorName.set("RED")
     ignoreFailures.set(true)
     enableExperimentalRules.set(true)
-    disabledRules.set(setOf("final-newline", "no-wildcard-imports"))
+    disabledRules.set(setOf("final-newline", "no-wildcard-imports", "experimental:package-name"))
     reporters {
         reporter(org.jlleitschuh.gradle.ktlint.reporter.ReporterType.SARIF)
         reporter(org.jlleitschuh.gradle.ktlint.reporter.ReporterType.PLAIN)

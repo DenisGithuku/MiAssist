@@ -1,7 +1,5 @@
 package com.githukudenis.todoey
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -11,7 +9,6 @@ import com.githukudenis.todoey.ui.add_task.AddTaskScreen
 import com.githukudenis.todoey.ui.task_detail.TaskDetailScreen
 import com.githukudenis.todoey.ui.todo_list.TodoListScreen
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun TodoeyNavigator(
     navController: NavHostController

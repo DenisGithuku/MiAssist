@@ -8,8 +8,7 @@ import com.githukudenis.todoey.util.SortType
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.test.StandardTestDispatcher
-import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.*
 import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
@@ -18,10 +17,10 @@ import org.junit.Test
 class AddTaskViewModelTest {
 
     @get:Rule
-    val mainCoroutineRule = MainCoroutineRule()
+    var mainCoroutineRule = MainCoroutineRule()
 
     @Test
-    fun addTodo() = runTest(StandardTestDispatcher()) {
+    fun addTodo() = runTest {
         val todoRepo = FakeTodoRepository()
         val addTaskViewModel = AddTaskViewModel(todoRepo)
         val todo = TodoEntity(todoId = 10, todoTitle = "")
@@ -33,7 +32,7 @@ class AddTaskViewModelTest {
     }
 
     @Test
-    fun todoAddedCompleteIsTrue() = runTest(StandardTestDispatcher()) {
+    fun todoAddedCompleteIsTrue() = runTest {
         val todoRepo = FakeTodoRepository()
         val addTaskViewModel = AddTaskViewModel(todoRepo)
         val todo = TodoEntity(todoId = 10, todoTitle = "")

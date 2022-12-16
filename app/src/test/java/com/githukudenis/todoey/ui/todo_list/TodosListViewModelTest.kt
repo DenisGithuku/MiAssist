@@ -4,8 +4,7 @@ import com.githukudenis.todoey.data.FakeTodoRepository
 import com.githukudenis.todoey.data.local.TodoEntity
 import com.githukudenis.todoey.util.MainCoroutineRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.StandardTestDispatcher
-import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.*
 import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
@@ -14,10 +13,10 @@ import org.junit.Test
 class TodosListViewModelTest {
 
     @get:Rule
-    val mainCoroutineRule = MainCoroutineRule()
+    var mainCoroutineRule = MainCoroutineRule()
 
     @Test
-    fun getAllTodos() = runTest(StandardTestDispatcher()) {
+    fun getAllTodos() = runTest {
         val testRepository = FakeTodoRepository()
         val todosListViewModel: TodosListViewModel = TodosListViewModel(testRepository)
 

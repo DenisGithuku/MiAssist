@@ -11,9 +11,9 @@ import com.githukudenis.todoey.data.local.TodoEntity
 import com.githukudenis.todoey.data.local.TodoeyDatabase
 import com.githukudenis.todoey.data.local.TodosDao
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.StandardTestDispatcher
-import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.*
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -27,9 +27,12 @@ class TodoeyDaoTest {
 
     private lateinit var todoeyDatabase: TodoeyDatabase
     private lateinit var todoeyDao: TodosDao
+    val testDispatcher = StandardTestDispatcher()
+    val scope = TestScope(testDispatcher)
 
     @Before
     fun setUp() {
+        Dispatchers.setMain(testDispatcher)
         todoeyDatabase = Room.inMemoryDatabaseBuilder(
             ApplicationProvider.getApplicationContext(),
             TodoeyDatabase::class.java
@@ -41,11 +44,12 @@ class TodoeyDaoTest {
 
     @After
     fun tearDown() {
+        Dispatchers.resetMain()
         todoeyDatabase.close()
     }
 
     @Test
-    fun insertTodo() = runTest(StandardTestDispatcher()) {
+    fun insertTodo() = scope.runTest {
         val todo = TodoEntity(
             todoId = 10,
             todoTitle = "Some test title",
@@ -63,7 +67,7 @@ class TodoeyDaoTest {
     }
 
     @Test
-    fun deleteTodo() = runTest(StandardTestDispatcher()) {
+    fun deleteTodo() = scope.runTest {
         val todo1 = TodoEntity(
             todoId = 3,
             todoTitle = "Some title",
@@ -96,7 +100,7 @@ class TodoeyDaoTest {
     }
 
     @Test
-    fun getAllTodos() = runTest(StandardTestDispatcher()) {
+    fun getAllTodos() = scope.runTest {
         val todo1 = TodoEntity(
             todoId = 3,
             todoTitle = "Some title",
@@ -129,7 +133,7 @@ class TodoeyDaoTest {
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun getTodoById() = runTest(StandardTestDispatcher()) {
+    fun getTodoById() = scope.runTest {
         val todo1 = TodoEntity(
             todoId = 3,
             todoTitle = "Some title",
