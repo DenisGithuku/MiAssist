@@ -38,7 +38,7 @@ fun TodoeyNavigator(
                 }
             )
         }
-        composable(route = TodoeyScreen.TaskDetail.routeId + "/{taskId") {
+        composable(route = TodoeyScreen.TaskDetail.routeId + "/{taskId}") {
             TaskDetailScreen(onNavigateUp = { navController.navigateUp() })
         }
         composable(route = TodoeyScreen.AddTask.routeId) {
