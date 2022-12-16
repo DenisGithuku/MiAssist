@@ -89,7 +89,7 @@ fun AddTaskScreen(
             }
         }
         Column(
-            modifier = Modifier.fillMaxSize().padding(contentPadding)
+            modifier = modifier.fillMaxSize().padding(contentPadding)
         ) {
             AddTaskScreen(
                 priority = state.priority,
@@ -129,9 +129,6 @@ private fun AddTaskScreen(
         mutableStateOf("")
     }
 
-    var dateDialogOpen by remember {
-        mutableStateOf(false)
-    }
 
     val dateDialogState = rememberMaterialDialogState()
     val timeDialogState = rememberMaterialDialogState()
@@ -239,6 +236,7 @@ private fun AddTaskScreen(
 
         Button(
             modifier = modifier.fillMaxWidth(),
+            shape = MaterialTheme.shapes.small,
             enabled = saveButtonEnabled,
             onClick = {
                 if (todoTitle.isEmpty() || todoDescription.isEmpty()) {

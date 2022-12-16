@@ -18,6 +18,8 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.time.LocalDate
+import java.time.LocalTime
 
 @RunWith(AndroidJUnit4::class)
 @SmallTest
@@ -48,8 +50,8 @@ class TodoeyDaoTest {
             todoId = 10,
             todoTitle = "Some test title",
             todoDescription = "Some dummy desc",
-            todoDueTime = 0L,
-            todoDueDate = 0L,
+            todoDueTime = LocalTime.now(),
+            todoDueDate = LocalDate.now(),
             completed = false,
             priority = Priority.HIGH
         )
@@ -66,22 +68,22 @@ class TodoeyDaoTest {
             todoId = 3,
             todoTitle = "Some title",
             todoDescription = "Some description",
-            todoDueDate = 0L,
-            todoDueTime = 0L
+            todoDueTime = LocalTime.now(),
+            todoDueDate = LocalDate.now()
         )
         val todo2 = TodoEntity(
             todoId = 4,
             todoTitle = "Some title",
             todoDescription = "Some description",
-            todoDueDate = 0L,
-            todoDueTime = 0L
+            todoDueTime = LocalTime.now(),
+            todoDueDate = LocalDate.now()
         )
         val todo3 = TodoEntity(
             todoId = 6,
             todoTitle = "Some title",
             todoDescription = "Some description",
-            todoDueDate = 0L,
-            todoDueTime = 0L
+            todoDueTime = LocalTime.now(),
+            todoDueDate = LocalDate.now()
         )
 
         todoeyDao.insertTodo(todo1)
@@ -99,22 +101,22 @@ class TodoeyDaoTest {
             todoId = 3,
             todoTitle = "Some title",
             todoDescription = "Some description",
-            todoDueDate = 0L,
-            todoDueTime = 0L
+            todoDueTime = LocalTime.now(),
+            todoDueDate = LocalDate.now()
         )
         val todo2 = TodoEntity(
             todoId = 4,
             todoTitle = "Some title",
             todoDescription = "Some description",
-            todoDueDate = 0L,
-            todoDueTime = 0L
+            todoDueTime = LocalTime.now(),
+            todoDueDate = LocalDate.now()
         )
         val todo3 = TodoEntity(
             todoId = 6,
             todoTitle = "Some title",
             todoDescription = "Some description",
-            todoDueDate = 0L,
-            todoDueTime = 0L
+            todoDueTime = LocalTime.now(),
+            todoDueDate = LocalDate.now()
         )
 
         todoeyDao.insertTodo(todo1)
@@ -132,22 +134,22 @@ class TodoeyDaoTest {
             todoId = 3,
             todoTitle = "Some title",
             todoDescription = "Some description",
-            todoDueDate = 0L,
-            todoDueTime = 0L
+            todoDueTime = LocalTime.now(),
+            todoDueDate = LocalDate.now()
         )
         val todo2 = TodoEntity(
             todoId = 4,
             todoTitle = "Some title",
             todoDescription = "Some description",
-            todoDueDate = 0L,
-            todoDueTime = 0L
+            todoDueTime = LocalTime.now(),
+            todoDueDate = LocalDate.now()
         )
         val todo3 = TodoEntity(
             todoId = 6,
             todoTitle = "Some title",
             todoDescription = "Some description",
-            todoDueDate = 0L,
-            todoDueTime = 0L
+            todoDueTime = LocalTime.now(),
+            todoDueDate = LocalDate.now()
         )
 
         todoeyDao.insertTodo(todo1)

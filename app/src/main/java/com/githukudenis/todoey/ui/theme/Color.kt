@@ -1,4 +1,4 @@
-package com.example.compose
+package com.githukudenis.todoey.ui.theme
 import androidx.compose.ui.graphics.Color
 
 val md_theme_light_primary = Color(0xFF335CA8)
@@ -27,7 +27,7 @@ val md_theme_light_outline = Color(0xFF75777F)
 val md_theme_light_inverseOnSurface = Color(0xFFD6F6FF)
 val md_theme_light_inverseSurface = Color(0xFF00363F)
 val md_theme_light_inversePrimary = Color(0xFFAEC6FF)
-val md_theme_light_shadow = Color(0xFF000000)
+//val md_theme_light_shadow = Color(0xFF000000)
 val md_theme_light_surfaceTint = Color(0xFF335CA8)
 val md_theme_light_outlineVariant = Color(0xFFC5C6D0)
 val md_theme_light_scrim = Color(0xFF000000)
@@ -58,9 +58,9 @@ val md_theme_dark_outline = Color(0xFF8E9099)
 val md_theme_dark_inverseOnSurface = Color(0xFF001F25)
 val md_theme_dark_inverseSurface = Color(0xFFA6EEFF)
 val md_theme_dark_inversePrimary = Color(0xFF335CA8)
-val md_theme_dark_shadow = Color(0xFF000000)
+//val md_theme_dark_shadow = Color(0xFF000000)
 val md_theme_dark_surfaceTint = Color(0xFFAEC6FF)
 val md_theme_dark_outlineVariant = Color(0xFF44474F)
 val md_theme_dark_scrim = Color(0xFF000000)
 
-val seed = Color(0xFF345DA8)
+//val seed = Color(0xFF345DA8)

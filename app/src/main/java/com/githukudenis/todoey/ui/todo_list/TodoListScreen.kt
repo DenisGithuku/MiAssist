@@ -1,7 +1,9 @@
 package com.githukudenis.todoey.ui.todo_list
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -25,7 +27,7 @@ import com.githukudenis.todoey.ui.todo_list.components.TodoCard
 @Composable
 fun TodoListScreen(
     onNewTask: () -> Unit,
-    onOpenTodoDetails: (Int) -> Unit
+    onOpenTodoDetails: (Long) -> Unit
 ) {
     val todosListViewModel: TodosListViewModel = hiltViewModel()
     val state by todosListViewModel.state.collectAsStateWithLifecycle()
@@ -33,6 +35,7 @@ fun TodoListScreen(
 
     Scaffold(
         snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState)
         },
         floatingActionButton = {
             FloatingActionButton(
@@ -46,7 +49,11 @@ fun TodoListScreen(
             }
         }
     ) { contentPadding ->
-        TodoList(todoList = state, onOpenTodoDetails = onOpenTodoDetails)
+        Column(
+            modifier = Modifier.fillMaxSize().padding(contentPadding)
+        ) {
+            TodoList(todoList = state, onOpenTodoDetails = onOpenTodoDetails)
+        }
     }
 }
 
@@ -54,7 +61,7 @@ fun TodoListScreen(
 private fun TodoList(
     modifier: Modifier = Modifier,
     todoList: List<TodoEntity>,
-    onOpenTodoDetails: (Int) -> Unit
+    onOpenTodoDetails: (Long) -> Unit
 ) {
     val context = LocalContext.current
 
@@ -78,7 +85,8 @@ private fun TodoList(
         items(items = todoList) { item: TodoEntity ->
             TodoCard(
                 modifier = modifier,
-                todoEntity = item
+                todoEntity = item,
+                onOpenTodoDetails = onOpenTodoDetails
             )
         }
     }

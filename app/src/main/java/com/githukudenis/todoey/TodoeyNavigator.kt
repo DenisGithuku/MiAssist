@@ -1,5 +1,7 @@
 package com.githukudenis.todoey
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -9,6 +11,7 @@ import com.githukudenis.todoey.ui.add_task.AddTaskScreen
 import com.githukudenis.todoey.ui.task_detail.TaskDetailScreen
 import com.githukudenis.todoey.ui.todo_list.TodoListScreen
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun TodoeyNavigator(
     navController: NavHostController
@@ -44,13 +47,7 @@ fun TodoeyNavigator(
         composable(route = TodoeyScreen.AddTask.routeId) {
             AddTaskScreen(
                 onSaveTask = {
-                    navController.navigate(TodoeyScreen.TaskList.routeId) {
-                        popUpTo(TodoeyScreen.TaskDetail.routeId) {
-                            saveState = true
-                            inclusive = true
-                        }
-                        restoreState = true
-                    }
+                    navController.navigateUp()
                 },
                 onNavigateUp = { navController.navigateUp() }
             )
