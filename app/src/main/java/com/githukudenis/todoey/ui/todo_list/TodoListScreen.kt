@@ -5,6 +5,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -83,7 +84,6 @@ fun FilterTaskSection(
     selectedPriority: Priority,
     onFilterByPriority: (Priority) -> Unit
 ) {
-
     val priorities = remember {
         listOf<Priority>(
             Priority.HIGH,
@@ -114,8 +114,8 @@ fun FilterTaskSection(
                     },
                     onClick = {
                         onFilterByPriority(priority)
-                    }
-
+                    },
+                    shape = CircleShape
                 )
             }
         }
@@ -138,7 +138,7 @@ private fun TodoList(
             TodoCard(
                 modifier = modifier,
                 todoEntity = item,
-                OnOpenTodoDetails = onOpenTodoDetails
+                onOpenTodoDetails = onOpenTodoDetails
             )
             if (todoList.indexOf(item) != todoList.size - 1) {
                 Divider()

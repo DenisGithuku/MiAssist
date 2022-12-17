@@ -3,11 +3,10 @@
 package com.githukudenis.todoey.ui.add_task
 
 import android.annotation.SuppressLint
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -108,7 +107,6 @@ fun AddTaskScreen(
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun AddTaskScreen(
@@ -212,7 +210,8 @@ private fun AddTaskScreen(
                         painter = painterResource(R.drawable.calendar),
                         contentDescription = "Day"
                     )
-                }
+                },
+                shape = CircleShape
             )
             AssistChip(
                 onClick = {
@@ -228,7 +227,8 @@ private fun AddTaskScreen(
                         painter = painterResource(R.drawable.clock),
                         contentDescription = "Time"
                     )
-                }
+                },
+                shape = CircleShape
             )
         }
 
@@ -272,7 +272,7 @@ private fun AddTaskScreen(
         }
     ) {
         datepicker(
-            initialDate = LocalDate.now(),
+            initialDate = pickedDate,
             title = context.getString(R.string.date_dialog_title),
             allowedDateValidator = { date ->
                 date.dayOfMonth >= LocalDate.now().dayOfMonth
@@ -295,9 +295,8 @@ private fun AddTaskScreen(
         }
     ) {
         timepicker(
-            initialTime = LocalTime.now().plusHours(1),
-            title = context.getString(R.string.time_dialog_title),
-            timeRange = LocalTime.now()..LocalTime.MAX
+            initialTime = pickedTime.plusHours(1),
+            title = context.getString(R.string.time_dialog_title)
         ) { time ->
             pickedTime = time
         }
