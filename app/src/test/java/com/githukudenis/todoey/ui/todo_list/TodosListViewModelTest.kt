@@ -40,6 +40,13 @@ class TodosListViewModelTest {
     }
 
     @Test
+    fun onEvent() = runTest {
+        val event = TodoListEvent.ChangePriorityFilter(Priority.HIGH)
+        todosListViewModel.onEvent(event)
+        assertEquals(Priority.HIGH, todosListViewModel.state.value.selectedPriority)
+    }
+
+    @Test
     fun filterTodosByPriority() = runTest {
         testRepository.addTodo(TodoEntity(todoTitle = ""))
         testRepository.addTodo(TodoEntity(todoTitle = ""))
