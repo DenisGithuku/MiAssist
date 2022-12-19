@@ -2,11 +2,11 @@ package com.githukudenis.todoey.di
 
 import android.content.Context
 import androidx.room.Room
-import com.githukudenis.todoey.data.local.TodoRepositoryImpl
-import com.githukudenis.todoey.data.local.TodoeyDatabase
-import com.githukudenis.todoey.data.local.TodosDao
-import com.githukudenis.todoey.data.local.TodosDataSource
-import com.githukudenis.todoey.domain.TodosRepository
+import com.githukudenis.todoey.data.local.TasksDataSource
+import com.githukudenis.todoey.data.local.TasksRepositoryImpl
+import com.githukudenis.todoey.data.local.TasksDatabase
+import com.githukudenis.todoey.data.local.TasksDao
+import com.githukudenis.todoey.domain.TasksRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -20,11 +20,11 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideTodoeyDatabase(@ApplicationContext context: Context): TodoeyDatabase {
+    fun provideTasksDatabase(@ApplicationContext context: Context): TasksDatabase {
         return Room.databaseBuilder(
             context,
-            TodoeyDatabase::class.java,
-            "todoey_database"
+            TasksDatabase::class.java,
+            "tasks_database"
         )
             .fallbackToDestructiveMigration()
             .build()
@@ -32,17 +32,17 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideTodosDao(todoeyDatabase: TodoeyDatabase): TodosDao {
-        return todoeyDatabase.todosDao()
+    fun provideTasksDao(tasksDatabase: TasksDatabase): TasksDao {
+        return tasksDatabase.tasksDao()
     }
 
     @Provides
     @Singleton
-    fun provideTodosDataSource(todosDao: TodosDao): TodosDataSource = TodosDataSource(todosDao)
+    fun provideTasksDataSource(tasksDao: TasksDao): TasksDataSource = TasksDataSource(tasksDao)
 
     @Provides
     @Singleton
-    fun provideTodosRepository(
-        todosDataSource: TodosDataSource
-    ): TodosRepository = TodoRepositoryImpl(todosDataSource = todosDataSource)
+    fun provideTasksRepository(
+        tasksDataSource: TasksDataSource
+    ): TasksRepository = TasksRepositoryImpl(tasksDataSource = tasksDataSource)
 }

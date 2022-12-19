@@ -1,4 +1,4 @@
-package com.githukudenis.todoey.ui.todo_list.components
+package com.githukudenis.todoey.ui.task_list.components
 
 import android.content.res.Configuration
 import androidx.compose.foundation.BorderStroke
@@ -15,18 +15,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.githukudenis.todoey.data.local.TodoEntity
+import com.githukudenis.todoey.data.local.TaskEntity
 import java.time.LocalDate
 import java.time.LocalTime
 
 @Composable
-fun TodoCard(
+fun TaskCard(
     modifier: Modifier = Modifier,
     onOpenTodoDetails: (Long) -> Unit,
-    todoEntity: TodoEntity
+    taskEntity: TaskEntity
 ) {
     val dueDate = remember {
-        when (todoEntity.todoDueDate?.dayOfMonth) {
+        when (taskEntity.taskDueDate?.dayOfMonth) {
             LocalDate.now().dayOfMonth - 1 -> {
                 "Yesterday"
             }
@@ -46,21 +46,21 @@ fun TodoCard(
     }
 
     val dueTime = remember {
-        "${todoEntity.todoDueTime?.hour}:${todoEntity.todoDueTime?.minute}"
+        "${taskEntity.taskDueTime?.hour}:${taskEntity.taskDueTime?.minute}"
     }
 
     Column(
         modifier = modifier.fillMaxWidth()
-            .clickable { onOpenTodoDetails(todoEntity.todoId ?: return@clickable) }
+            .clickable { onOpenTodoDetails(taskEntity.taskId ?: return@clickable) }
             .padding(12.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         Text(
-            text = todoEntity.todoTitle,
+            text = taskEntity.taskTitle,
             style = MaterialTheme.typography.bodyLarge
         )
         Text(
-            text = todoEntity.todoDescription ?: return,
+            text = taskEntity.taskDescription ?: return,
             style = MaterialTheme.typography.labelMedium,
             maxLines = 2,
             overflow = TextOverflow.Ellipsis
@@ -93,14 +93,14 @@ fun TodoCard(
     uiMode = Configuration.UI_MODE_NIGHT_NO or Configuration.UI_MODE_TYPE_NORMAL
 )
 @Composable
-fun TodoCardPreviewLight() {
-    TodoCard(
+fun TaskCardPreviewLight() {
+    TaskCard(
         onOpenTodoDetails = {},
-        todoEntity = TodoEntity(
-            todoTitle = "Go hiking with friends",
-            todoDescription = "In the evening",
-            todoDueDate = LocalDate.now(),
-            todoDueTime = LocalTime.now()
+        taskEntity = TaskEntity(
+            taskTitle = "Go hiking with friends",
+            taskDescription = "In the evening",
+            taskDueDate = LocalDate.now(),
+            taskDueTime = LocalTime.now()
         )
     )
 }
@@ -111,14 +111,14 @@ fun TodoCardPreviewLight() {
     uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL
 )
 @Composable
-fun TodoCardPreviewDark() {
-    TodoCard(
+fun TaskCardPreviewDark() {
+    TaskCard(
         onOpenTodoDetails = {},
-        todoEntity = TodoEntity(
-            todoTitle = "Go hiking with friends",
-            todoDescription = "In the evening",
-            todoDueDate = LocalDate.now(),
-            todoDueTime = LocalTime.now()
+        taskEntity = TaskEntity(
+            taskTitle = "Go hiking with friends",
+            taskDescription = "In the evening",
+            taskDueDate = LocalDate.now(),
+            taskDueTime = LocalTime.now()
         )
     )
 }

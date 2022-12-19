@@ -21,7 +21,7 @@ import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.githukudenis.todoey.R
 import com.githukudenis.todoey.data.local.Priority
-import com.githukudenis.todoey.data.local.TodoEntity
+import com.githukudenis.todoey.data.local.TaskEntity
 import com.githukudenis.todoey.ui.add_task.components.PriorityChip
 import com.githukudenis.todoey.ui.add_task.components.TaskInput
 import com.githukudenis.todoey.util.UserMessage
@@ -114,7 +114,7 @@ private fun AddTaskScreen(
     priority: Priority,
     onChangePriority: (Priority) -> Unit,
     priorities: List<Priority>,
-    onSaveTask: (TodoEntity) -> Unit,
+    onSaveTask: (TaskEntity) -> Unit,
     onShowUserMessage: (UserMessage) -> Unit
 ) {
     val context = LocalContext.current
@@ -242,14 +242,14 @@ private fun AddTaskScreen(
                     val userMessage = UserMessage(message = message)
                     onShowUserMessage(userMessage)
                 } else {
-                    val todoEntity = TodoEntity(
-                        todoTitle = todoTitle,
-                        todoDescription = todoDescription,
-                        todoDueTime = pickedTime,
-                        todoDueDate = pickedDate,
+                    val taskEntity = TaskEntity(
+                        taskTitle = todoTitle,
+                        taskDescription = todoDescription,
+                        taskDueTime = pickedTime,
+                        taskDueDate = pickedDate,
                         priority = priority
                     )
-                    onSaveTask(todoEntity)
+                    onSaveTask(taskEntity)
                 }
             }
         ) {

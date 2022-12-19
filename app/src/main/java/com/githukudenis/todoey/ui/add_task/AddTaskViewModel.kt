@@ -2,8 +2,8 @@ package com.githukudenis.todoey.ui.add_task
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.githukudenis.todoey.data.local.TodoEntity
-import com.githukudenis.todoey.domain.TodosRepository
+import com.githukudenis.todoey.data.local.TaskEntity
+import com.githukudenis.todoey.domain.TasksRepository
 import com.githukudenis.todoey.util.UserMessage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,15 +14,15 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AddTaskViewModel @Inject constructor(
-    private val todosRepository: TodosRepository
+    private val tasksRepository: TasksRepository
 ) : ViewModel() {
 
     private var _state = MutableStateFlow(AddTaskUiState())
     val state: StateFlow<AddTaskUiState> get() = _state
 
-    fun saveTask(todoEntity: TodoEntity) {
+    fun saveTask(taskEntity: TaskEntity) {
         viewModelScope.launch {
-            todosRepository.addTodo(todoEntity)
+            tasksRepository.addTask(taskEntity)
             _state.update { state ->
                 state.copy(todoAdded = true)
             }
@@ -38,7 +38,7 @@ class AddTaskViewModel @Inject constructor(
             }
 
             is AddTaskEvent.SaveTask -> {
-                saveTask(addTaskEvent.todoEntity)
+                saveTask(addTaskEvent.taskEntity)
             }
 
             is AddTaskEvent.ShowUserMessage -> {

@@ -1,7 +1,7 @@
 package com.githukudenis.todoey.ui.add_task
 
 import com.githukudenis.todoey.data.FakeTodoRepository
-import com.githukudenis.todoey.data.local.TodoEntity
+import com.githukudenis.todoey.data.local.TaskEntity
 import com.githukudenis.todoey.util.MainCoroutineRule
 import com.githukudenis.todoey.util.OrderType
 import com.githukudenis.todoey.util.SortType
@@ -23,10 +23,10 @@ class AddTaskViewModelTest {
     fun addTodo() = runTest {
         val todoRepo = FakeTodoRepository()
         val addTaskViewModel = AddTaskViewModel(todoRepo)
-        val todo = TodoEntity(todoId = 10, todoTitle = "")
+        val todo = TaskEntity(taskId = 10, taskTitle = "")
 
         addTaskViewModel.saveTask(todo)
-        val todos = todoRepo.getAllTodos(SortType.DUE_DATE, OrderType.ASCENDING).first()
+        val todos = todoRepo.getAllTasks(SortType.DUE_DATE, OrderType.ASCENDING).first()
 
         assertThat(todos).contains(todo)
     }
@@ -35,7 +35,7 @@ class AddTaskViewModelTest {
     fun todoAddedCompleteIsTrue() = runTest {
         val todoRepo = FakeTodoRepository()
         val addTaskViewModel = AddTaskViewModel(todoRepo)
-        val todo = TodoEntity(todoId = 10, todoTitle = "")
+        val todo = TaskEntity(taskId = 10, taskTitle = "")
 
         addTaskViewModel.saveTask(todo)
         val viewModelState = addTaskViewModel.state.value

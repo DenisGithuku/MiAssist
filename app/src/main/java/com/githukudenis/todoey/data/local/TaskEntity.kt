@@ -6,13 +6,13 @@ import java.time.LocalDate
 import java.time.LocalTime
 
 @Entity(tableName = "todos_table")
-data class TodoEntity(
+data class TaskEntity(
     @PrimaryKey(autoGenerate = true)
-    val todoId: Long? = null,
-    val todoTitle: String,
-    val todoDescription: String? = null,
-    val todoDueTime: LocalTime? = null,
-    val todoDueDate: LocalDate? = null,
+    val taskId: Long? = null,
+    val taskTitle: String,
+    val taskDescription: String? = null,
+    val taskDueTime: LocalTime? = null,
+    val taskDueDate: LocalDate? = null,
     val completed: Boolean = false,
     val priority: Priority = Priority.LOW
 )

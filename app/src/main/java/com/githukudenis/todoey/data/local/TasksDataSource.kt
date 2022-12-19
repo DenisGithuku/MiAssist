@@ -1,7 +1,7 @@
 package com.githukudenis.todoey.data.local
 
 import android.util.Log
-import com.githukudenis.todoey.domain.TodosRepository
+import com.githukudenis.todoey.domain.TasksRepository
 import com.githukudenis.todoey.util.OrderType
 import com.githukudenis.todoey.util.SortType
 import kotlinx.coroutines.Dispatchers
@@ -12,19 +12,19 @@ import javax.inject.Inject
 
 private const val TAG = "TodosDataSourceError"
 
-class TodosDataSource @Inject constructor(
-    private val todosDao: TodosDao
-) : TodosRepository {
-    override suspend fun addTodo(todoEntity: TodoEntity) {
-        return todosDao.insertTodo(todoEntity)
+class TasksDataSource @Inject constructor(
+    private val tasksDao: TasksDao
+) : TasksRepository {
+    override suspend fun addTask(taskEntity: TaskEntity) {
+        return tasksDao.insertTask(taskEntity)
     }
 
-    override suspend fun getAllTodos(
+    override suspend fun getAllTasks(
         sortType: SortType,
         orderType: OrderType
-    ): Flow<List<TodoEntity>> = flow<List<TodoEntity>> {
+    ): Flow<List<TaskEntity>> = flow<List<TaskEntity>> {
         try {
-            val todos = todosDao.getAllTodos()
+            val todos = tasksDao.getAllTasks()
             when (orderType) {
                 OrderType.ASCENDING -> {
                     when (sortType) {
@@ -34,12 +34,12 @@ class TodosDataSource @Inject constructor(
                         }
 
                         SortType.DUE_DATE -> {
-                            val sortedTodos = todos.sortedBy { todo -> todo.todoDueDate }
+                            val sortedTodos = todos.sortedBy { todo -> todo.taskDueDate }
                             emit(sortedTodos)
                         }
 
                         SortType.DUE_TIME -> {
-                            val sortedTodos = todos.sortedBy { todo -> todo.todoDueTime }
+                            val sortedTodos = todos.sortedBy { todo -> todo.taskDueTime }
                             emit(sortedTodos)
                         }
                     }
@@ -53,12 +53,12 @@ class TodosDataSource @Inject constructor(
                         }
 
                         SortType.DUE_DATE -> {
-                            val sortedTodos = todos.sortedByDescending { todo -> todo.todoDueDate }
+                            val sortedTodos = todos.sortedByDescending { todo -> todo.taskDueDate }
                             emit(sortedTodos)
                         }
 
                         SortType.DUE_TIME -> {
-                            val sortedTodos = todos.sortedByDescending { todo -> todo.todoDueTime }
+                            val sortedTodos = todos.sortedByDescending { todo -> todo.taskDueTime }
                             emit(sortedTodos)
                         }
                     }
@@ -70,17 +70,17 @@ class TodosDataSource @Inject constructor(
         }
     }.flowOn(Dispatchers.IO)
 
-    override suspend fun deleteTodo(todoEntity: TodoEntity) {
+    override suspend fun deleteTask(taskEntity: TaskEntity) {
         try {
-            todosDao.deleteTodo(todoEntity.todoId ?: return)
+            tasksDao.deleteTask(taskEntity.taskId ?: return)
         } catch (e: Exception) {
             Log.e(TAG, "deleteTodo: ${e.localizedMessage}")
         }
     }
 
-    override suspend fun getTodoById(todoId: Long): Flow<TodoEntity?> = flow<TodoEntity?> {
+    override suspend fun getTaskById(todoId: Long): Flow<TaskEntity?> = flow<TaskEntity?> {
         try {
-            val todo = todosDao.getTodoById(todoId)
+            val todo = tasksDao.getTaskById(todoId)
             emit(todo)
         } catch (e: Exception) {
             Log.e(TAG, "getTodoById: ${e.message}")

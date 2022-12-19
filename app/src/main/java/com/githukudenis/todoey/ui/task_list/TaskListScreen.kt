@@ -1,4 +1,4 @@
-package com.githukudenis.todoey.ui.todo_list
+package com.githukudenis.todoey.ui.task_list
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -21,17 +21,17 @@ import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.githukudenis.todoey.R
 import com.githukudenis.todoey.data.local.Priority
-import com.githukudenis.todoey.data.local.TodoEntity
-import com.githukudenis.todoey.ui.todo_list.components.TodoCard
+import com.githukudenis.todoey.data.local.TaskEntity
+import com.githukudenis.todoey.ui.task_list.components.TaskCard
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLifecycleComposeApi::class)
 @Composable
-fun TodoListScreen(
+fun TaskListScreen(
     onNewTask: () -> Unit,
     onOpenTodoDetails: (Long) -> Unit
 ) {
-    val todosListViewModel: TodosListViewModel = hiltViewModel()
-    val state by todosListViewModel.state.collectAsStateWithLifecycle()
+    val taskListViewModel: TaskListViewModel = hiltViewModel()
+    val state by taskListViewModel.state.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
 
@@ -69,10 +69,10 @@ fun TodoListScreen(
             FilterTaskSection(
                 selectedPriority = state.selectedPriority,
                 onFilterByPriority = { priority ->
-                    todosListViewModel.onEvent(TodoListEvent.ChangePriorityFilter(priority = priority))
+                    taskListViewModel.onEvent(TaskListEvent.ChangePriorityFilter(priority = priority))
                 }
             )
-            TodoList(todoList = state.todos, onOpenTodoDetails = onOpenTodoDetails)
+            TaskList(todoList = state.todos, onOpenTodoDetails = onOpenTodoDetails)
         }
     }
 }
@@ -123,9 +123,9 @@ fun FilterTaskSection(
 }
 
 @Composable
-private fun TodoList(
+private fun TaskList(
     modifier: Modifier = Modifier,
-    todoList: List<TodoEntity>,
+    todoList: List<TaskEntity>,
     onOpenTodoDetails: (Long) -> Unit
 ) {
     val listState = rememberLazyListState()
@@ -134,10 +134,10 @@ private fun TodoList(
         state = listState,
         modifier = modifier
     ) {
-        items(items = todoList) { item: TodoEntity ->
-            TodoCard(
+        items(items = todoList) { item: TaskEntity ->
+            TaskCard(
                 modifier = modifier,
-                todoEntity = item,
+                taskEntity = item,
                 onOpenTodoDetails = onOpenTodoDetails
             )
             if (todoList.indexOf(item) != todoList.size - 1) {

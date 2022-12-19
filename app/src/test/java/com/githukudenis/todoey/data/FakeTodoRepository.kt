@@ -1,38 +1,38 @@
 package com.githukudenis.todoey.data
 
-import com.githukudenis.todoey.data.local.TodoEntity
-import com.githukudenis.todoey.domain.TodosRepository
+import com.githukudenis.todoey.data.local.TaskEntity
+import com.githukudenis.todoey.domain.TasksRepository
 import com.githukudenis.todoey.util.OrderType
 import com.githukudenis.todoey.util.SortType
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flowOf
 
-class FakeTodoRepository : TodosRepository {
+class FakeTodoRepository : TasksRepository {
 
-    private var todos = mutableListOf<TodoEntity>()
-    private var observableTodos = MutableStateFlow<List<TodoEntity>>(emptyList())
+    private var todos = mutableListOf<TaskEntity>()
+    private var observableTodos = MutableStateFlow<List<TaskEntity>>(emptyList())
 
     private fun refreshObservableTodos() {
         observableTodos.value = todos
     }
 
-    override suspend fun addTodo(todoEntity: TodoEntity) {
-        todos.add(todoEntity)
+    override suspend fun addTask(taskEntity: TaskEntity) {
+        todos.add(taskEntity)
         refreshObservableTodos()
     }
 
-    override suspend fun getAllTodos(sortType: SortType, orderType: OrderType): Flow<List<TodoEntity>> {
+    override suspend fun getAllTasks(sortType: SortType, orderType: OrderType): Flow<List<TaskEntity>> {
         return observableTodos
     }
 
-    override suspend fun deleteTodo(todoEntity: TodoEntity) {
-        todos.remove(todoEntity)
+    override suspend fun deleteTask(taskEntity: TaskEntity) {
+        todos.remove(taskEntity)
         refreshObservableTodos()
     }
 
-    override suspend fun getTodoById(todoId: Long): Flow<TodoEntity?> {
-        val todo = observableTodos.value.find { todo -> todo.todoId == todoId }
+    override suspend fun getTaskById(todoId: Long): Flow<TaskEntity?> {
+        val todo = observableTodos.value.find { todo -> todo.taskId == todoId }
         return flowOf(todo)
     }
 }

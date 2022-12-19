@@ -7,9 +7,9 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.SmallTest
 import com.githukudenis.todoey.data.local.Priority
-import com.githukudenis.todoey.data.local.TodoEntity
-import com.githukudenis.todoey.data.local.TodoeyDatabase
-import com.githukudenis.todoey.data.local.TodosDao
+import com.githukudenis.todoey.data.local.TaskEntity
+import com.githukudenis.todoey.data.local.TasksDao
+import com.githukudenis.todoey.data.local.TasksDatabase
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -25,142 +25,142 @@ import java.time.LocalTime
 @SmallTest
 class TodoeyDaoTest {
 
-    private lateinit var todoeyDatabase: TodoeyDatabase
-    private lateinit var todoeyDao: TodosDao
+    private lateinit var tasksDatabase: TasksDatabase
+    private lateinit var tasksDao: TasksDao
     val testDispatcher = StandardTestDispatcher()
     val scope = TestScope(testDispatcher)
 
     @Before
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
-        todoeyDatabase = Room.inMemoryDatabaseBuilder(
+        tasksDatabase = Room.inMemoryDatabaseBuilder(
             ApplicationProvider.getApplicationContext(),
-            TodoeyDatabase::class.java
+            TasksDatabase::class.java
         )
             .allowMainThreadQueries()
             .build()
-        todoeyDao = todoeyDatabase.todosDao()
+        tasksDao = tasksDatabase.tasksDao()
     }
 
     @After
     fun tearDown() {
         Dispatchers.resetMain()
-        todoeyDatabase.close()
+        tasksDatabase.close()
     }
 
     @Test
-    fun insertTodo() = scope.runTest {
-        val todo = TodoEntity(
-            todoId = 10,
-            todoTitle = "Some test title",
-            todoDescription = "Some dummy desc",
-            todoDueTime = LocalTime.now(),
-            todoDueDate = LocalDate.now(),
+    fun insertTask() = scope.runTest {
+        val task = TaskEntity(
+            taskId = 10,
+            taskTitle = "Some test title",
+            taskDescription = "Some dummy desc",
+            taskDueTime = LocalTime.now(),
+            taskDueDate = LocalDate.now(),
             completed = false,
             priority = Priority.HIGH
         )
 
-        todoeyDao.insertTodo(todo)
+        tasksDao.insertTask(task)
 
-        val todos = todoeyDao.getAllTodos()
-        assertThat(todos).contains(todo)
+        val tasks = tasksDao.getAllTasks()
+        assertThat(tasks).contains(task)
     }
 
     @Test
     fun deleteTodo() = scope.runTest {
-        val todo1 = TodoEntity(
-            todoId = 3,
-            todoTitle = "Some title",
-            todoDescription = "Some description",
-            todoDueTime = LocalTime.now(),
-            todoDueDate = LocalDate.now()
+        val task1 = TaskEntity(
+            taskId = 3,
+            taskTitle = "Some title",
+            taskDescription = "Some description",
+            taskDueTime = LocalTime.now(),
+            taskDueDate = LocalDate.now()
         )
-        val todo2 = TodoEntity(
-            todoId = 4,
-            todoTitle = "Some title",
-            todoDescription = "Some description",
-            todoDueTime = LocalTime.now(),
-            todoDueDate = LocalDate.now()
+        val task2 = TaskEntity(
+            taskId = 4,
+            taskTitle = "Some title",
+            taskDescription = "Some description",
+            taskDueTime = LocalTime.now(),
+            taskDueDate = LocalDate.now()
         )
-        val todo3 = TodoEntity(
-            todoId = 6,
-            todoTitle = "Some title",
-            todoDescription = "Some description",
-            todoDueTime = LocalTime.now(),
-            todoDueDate = LocalDate.now()
+        val task3 = TaskEntity(
+            taskId = 6,
+            taskTitle = "Some title",
+            taskDescription = "Some description",
+            taskDueTime = LocalTime.now(),
+            taskDueDate = LocalDate.now()
         )
 
-        todoeyDao.insertTodo(todo1)
-        todoeyDao.insertTodo(todo2)
-        todoeyDao.insertTodo(todo3)
+        tasksDao.insertTask(task1)
+        tasksDao.insertTask(task2)
+        tasksDao.insertTask(task3)
 
-        todoeyDao.deleteTodo(todo2.todoId ?: return@runTest)
-        val todos = todoeyDao.getAllTodos()
-        assertThat(todos).doesNotContain(todo2)
+        tasksDao.deleteTask(task2.taskId ?: return@runTest)
+        val tasks = tasksDao.getAllTasks()
+        assertThat(tasks).doesNotContain(task2)
     }
 
     @Test
-    fun getAllTodos() = scope.runTest {
-        val todo1 = TodoEntity(
-            todoId = 3,
-            todoTitle = "Some title",
-            todoDescription = "Some description",
-            todoDueTime = LocalTime.now(),
-            todoDueDate = LocalDate.now()
+    fun getAllTasks() = scope.runTest {
+        val task1 = TaskEntity(
+            taskId = 3,
+            taskTitle = "Some title",
+            taskDescription = "Some description",
+            taskDueTime = LocalTime.now(),
+            taskDueDate = LocalDate.now()
         )
-        val todo2 = TodoEntity(
-            todoId = 4,
-            todoTitle = "Some title",
-            todoDescription = "Some description",
-            todoDueTime = LocalTime.now(),
-            todoDueDate = LocalDate.now()
+        val task2 = TaskEntity(
+            taskId = 4,
+            taskTitle = "Some title",
+            taskDescription = "Some description",
+            taskDueTime = LocalTime.now(),
+            taskDueDate = LocalDate.now()
         )
-        val todo3 = TodoEntity(
-            todoId = 6,
-            todoTitle = "Some title",
-            todoDescription = "Some description",
-            todoDueTime = LocalTime.now(),
-            todoDueDate = LocalDate.now()
+        val task3 = TaskEntity(
+            taskId = 6,
+            taskTitle = "Some title",
+            taskDescription = "Some description",
+            taskDueTime = LocalTime.now(),
+            taskDueDate = LocalDate.now()
         )
 
-        todoeyDao.insertTodo(todo1)
-        todoeyDao.insertTodo(todo2)
-        todoeyDao.insertTodo(todo3)
+        tasksDao.insertTask(task1)
+        tasksDao.insertTask(task2)
+        tasksDao.insertTask(task3)
 
-        val allTodos = todoeyDao.getAllTodos()
+        val allTodos = tasksDao.getAllTasks()
         assertThat(allTodos).hasSize(3)
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun getTodoById() = scope.runTest {
-        val todo1 = TodoEntity(
-            todoId = 3,
-            todoTitle = "Some title",
-            todoDescription = "Some description",
-            todoDueTime = LocalTime.now(),
-            todoDueDate = LocalDate.now()
+        val task1 = TaskEntity(
+            taskId = 3,
+            taskTitle = "Some title",
+            taskDescription = "Some description",
+            taskDueTime = LocalTime.now(),
+            taskDueDate = LocalDate.now()
         )
-        val todo2 = TodoEntity(
-            todoId = 4,
-            todoTitle = "Some title",
-            todoDescription = "Some description",
-            todoDueTime = LocalTime.now(),
-            todoDueDate = LocalDate.now()
+        val task2 = TaskEntity(
+            taskId = 4,
+            taskTitle = "Some title",
+            taskDescription = "Some description",
+            taskDueTime = LocalTime.now(),
+            taskDueDate = LocalDate.now()
         )
-        val todo3 = TodoEntity(
-            todoId = 6,
-            todoTitle = "Some title",
-            todoDescription = "Some description",
-            todoDueTime = LocalTime.now(),
-            todoDueDate = LocalDate.now()
+        val task3 = TaskEntity(
+            taskId = 6,
+            taskTitle = "Some title",
+            taskDescription = "Some description",
+            taskDueTime = LocalTime.now(),
+            taskDueDate = LocalDate.now()
         )
 
-        todoeyDao.insertTodo(todo1)
-        todoeyDao.insertTodo(todo2)
-        todoeyDao.insertTodo(todo3)
+        tasksDao.insertTask(task1)
+        tasksDao.insertTask(task2)
+        tasksDao.insertTask(task3)
 
-        val todoById = todoeyDao.getTodoById(todo3.todoId ?: return@runTest)
-        assertThat(todoById).isEqualTo(todo3)
+        val taskById = tasksDao.getTaskById(task3.taskId ?: return@runTest)
+        assertThat(taskById).isEqualTo(task3)
     }
 }

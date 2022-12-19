@@ -2,7 +2,7 @@ package com.githukudenis.todoey.di
 
 import android.content.Context
 import androidx.room.Room
-import com.githukudenis.todoey.data.local.TodoeyDatabase
+import com.githukudenis.todoey.data.local.TasksDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -12,16 +12,16 @@ import javax.inject.Named
 
 @Module
 @InstallIn(SingletonComponent::class)
-object TodoeyAppTestModule {
+object TasksTestModule {
 
     @Named("test_db")
     @Provides
-    fun provideTodoeyTestDatabase(
+    fun provideTasksTestDatabase(
         @ApplicationContext context: Context
-    ): TodoeyDatabase {
+    ): TasksDatabase {
         return Room.inMemoryDatabaseBuilder(
             context,
-            TodoeyDatabase::class.java
+            TasksDatabase::class.java
         )
             .allowMainThreadQueries()
             .build()

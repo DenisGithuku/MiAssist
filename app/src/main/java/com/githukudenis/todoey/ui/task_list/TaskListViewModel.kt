@@ -1,9 +1,9 @@
-package com.githukudenis.todoey.ui.todo_list
+package com.githukudenis.todoey.ui.task_list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.githukudenis.todoey.data.local.Priority
-import com.githukudenis.todoey.domain.TodosRepository
+import com.githukudenis.todoey.domain.TasksRepository
 import com.githukudenis.todoey.util.OrderType
 import com.githukudenis.todoey.util.SortType
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,35 +14,35 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class TodosListViewModel @Inject constructor(
-    private val todosRepository: TodosRepository
+class TaskListViewModel @Inject constructor(
+    private val tasksRepository: TasksRepository
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow(TodoListUiState())
-    val state: StateFlow<TodoListUiState> get() = _state
+    private val _state = MutableStateFlow(TaskListUiState())
+    val state: StateFlow<TaskListUiState> get() = _state
 
     init {
         getAllTodos()
     }
 
-    fun onEvent(todoListEvent: TodoListEvent) {
-        when (todoListEvent) {
-            is TodoListEvent.ChangeOrderType -> {
-                getAllTodos(orderType = todoListEvent.orderType)
+    fun onEvent(taskListEvent: TaskListEvent) {
+        when (taskListEvent) {
+            is TaskListEvent.ChangeOrderType -> {
+                getAllTodos(orderType = taskListEvent.orderType)
             }
-            is TodoListEvent.ChangeSortType -> {
-                getAllTodos(sortType = todoListEvent.sortType)
+            is TaskListEvent.ChangeSortType -> {
+                getAllTodos(sortType = taskListEvent.sortType)
             }
 
-            is TodoListEvent.ChangePriorityFilter -> {
-                changePriority(todoListEvent.priority)
+            is TaskListEvent.ChangePriorityFilter -> {
+                changePriority(taskListEvent.priority)
             }
         }
     }
 
     fun changePriority(priority: Priority) {
         viewModelScope.launch {
-            todosRepository.getAllTodos(sortType = SortType.DUE_DATE, orderType = OrderType.DESCENDING).collect { todos ->
+            tasksRepository.getAllTasks(sortType = SortType.DUE_DATE, orderType = OrderType.DESCENDING).collect { todos ->
                 val filteredTodos = todos.filter { todoEntity -> todoEntity.priority == priority }
                 _state.update {
                     it.copy(
@@ -56,7 +56,7 @@ class TodosListViewModel @Inject constructor(
 
     fun getAllTodos(sortType: SortType = SortType.DUE_DATE, orderType: OrderType = OrderType.DESCENDING) {
         viewModelScope.launch {
-            todosRepository.getAllTodos(sortType = sortType, orderType = orderType).collect { todos ->
+            tasksRepository.getAllTasks(sortType = sortType, orderType = orderType).collect { todos ->
                 _state.update {
                     it.copy(
                         todos = todos

@@ -1,11 +1,11 @@
-package com.githukudenis.todoey.ui.todo_list
+package com.githukudenis.todoey.ui.task_list
 
 import com.githukudenis.todoey.data.local.Priority
-import com.githukudenis.todoey.data.local.TodoEntity
+import com.githukudenis.todoey.data.local.TaskEntity
 import com.githukudenis.todoey.util.UserMessage
 
-data class TodoListUiState(
-    val todos: List<TodoEntity> = emptyList(),
+data class TaskListUiState(
+    val todos: List<TaskEntity> = emptyList(),
     val selectedPriority: Priority = Priority.HIGH,
     val userMessages: List<UserMessage> = emptyList()
 )
