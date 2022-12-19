@@ -13,6 +13,6 @@ data class TaskEntity(
     val taskDescription: String? = null,
     val taskDueTime: LocalTime? = null,
     val taskDueDate: LocalDate? = null,
-    val completed: Boolean = false,
+    var completed: Boolean = false,
     val priority: Priority = Priority.LOW
 )

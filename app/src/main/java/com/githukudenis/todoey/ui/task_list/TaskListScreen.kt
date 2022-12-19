@@ -72,7 +72,9 @@ fun TaskListScreen(
                     taskListViewModel.onEvent(TaskListEvent.ChangePriorityFilter(priority = priority))
                 }
             )
-            TaskList(todoList = state.todos, onOpenTodoDetails = onOpenTodoDetails)
+            TaskList(todoList = state.todos, onOpenTodoDetails = onOpenTodoDetails, onToggleCompleteTask = { taskId ->
+                taskListViewModel.onEvent(TaskListEvent.ToggleCompleteTask(taskId))
+            })
         }
     }
 }
@@ -126,6 +128,7 @@ fun FilterTaskSection(
 private fun TaskList(
     modifier: Modifier = Modifier,
     todoList: List<TaskEntity>,
+    onToggleCompleteTask: (Long) -> Unit,
     onOpenTodoDetails: (Long) -> Unit
 ) {
     val listState = rememberLazyListState()
@@ -138,7 +141,8 @@ private fun TaskList(
             TaskCard(
                 modifier = modifier,
                 taskEntity = item,
-                onOpenTodoDetails = onOpenTodoDetails
+                onOpenTodoDetails = onOpenTodoDetails,
+                onToggleCompleteTask = onToggleCompleteTask
             )
             if (todoList.indexOf(item) != todoList.size - 1) {
                 Divider()

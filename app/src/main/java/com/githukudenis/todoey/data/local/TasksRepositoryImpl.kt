@@ -24,4 +24,8 @@ class TasksRepositoryImpl @Inject constructor(
     override suspend fun getTaskById(todoId: Long): Flow<TaskEntity?> {
         return tasksDataSource.getTaskById(todoId)
     }
+
+    override suspend fun toggleCompleteTask(completed: Boolean, taskId: Long) {
+        return tasksDataSource.toggleCompleteTask(completed = completed, taskId = taskId)
+    }
 }

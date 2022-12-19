@@ -13,4 +13,6 @@ interface TasksRepository {
     suspend fun deleteTask(taskEntity: TaskEntity)
 
     suspend fun getTaskById(todoId: Long): Flow<TaskEntity?>
+
+    suspend fun toggleCompleteTask(completed: Boolean, taskId: Long)
 }

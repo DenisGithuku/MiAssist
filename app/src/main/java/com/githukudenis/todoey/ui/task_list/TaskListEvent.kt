@@ -8,4 +8,5 @@ sealed interface TaskListEvent {
     data class ChangeSortType(val sortType: SortType) : TaskListEvent
     data class ChangeOrderType(val orderType: OrderType) : TaskListEvent
     data class ChangePriorityFilter(val priority: Priority) : TaskListEvent
+    data class ToggleCompleteTask(val taskId: Long) : TaskListEvent
 }

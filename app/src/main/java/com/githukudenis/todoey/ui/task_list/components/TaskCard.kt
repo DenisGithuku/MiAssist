@@ -7,6 +7,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -23,6 +24,7 @@ import java.time.LocalTime
 fun TaskCard(
     modifier: Modifier = Modifier,
     onOpenTodoDetails: (Long) -> Unit,
+    onToggleCompleteTask: (Long) -> Unit,
     taskEntity: TaskEntity
 ) {
     val dueDate = remember {
@@ -49,40 +51,50 @@ fun TaskCard(
         "${taskEntity.taskDueTime?.hour}:${taskEntity.taskDueTime?.minute}"
     }
 
-    Column(
-        modifier = modifier.fillMaxWidth()
-            .clickable { onOpenTodoDetails(taskEntity.taskId ?: return@clickable) }
+    Row(
+        modifier = modifier.fillMaxWidth().clickable { onOpenTodoDetails(taskEntity.taskId ?: return@clickable) }
             .padding(12.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+        horizontalArrangement = Arrangement.spacedBy(4.dp)
     ) {
-        Text(
-            text = taskEntity.taskTitle,
-            style = MaterialTheme.typography.bodyLarge
+        RadioButton(
+            selected = taskEntity.completed,
+            onClick = {
+                onToggleCompleteTask(taskEntity.taskId ?: return@RadioButton)
+            }
         )
-        Text(
-            text = taskEntity.taskDescription ?: return,
-            style = MaterialTheme.typography.labelMedium,
-            maxLines = 2,
-            overflow = TextOverflow.Ellipsis
-        )
-
-        Box(
-            modifier = modifier
-                .border(
-                    border = BorderStroke(
-                        width = 1.dp,
-                        color = MaterialTheme.colorScheme.primary
-                    ),
-                    shape = CircleShape
-                )
-                .padding(4.dp),
-            contentAlignment = Alignment.Center
+        Column(
+            modifier = modifier,
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Text(
-                text = "$dueDate, $dueTime",
-                style = MaterialTheme.typography.labelMedium,
-                color = MaterialTheme.colorScheme.primary
+                text = taskEntity.taskTitle,
+                style = MaterialTheme.typography.bodyLarge
             )
+            Text(
+                text = taskEntity.taskDescription ?: return,
+                style = MaterialTheme.typography.labelMedium,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis
+            )
+
+            Box(
+                modifier = modifier
+                    .border(
+                        border = BorderStroke(
+                            width = 1.dp,
+                            color = MaterialTheme.colorScheme.primary
+                        ),
+                        shape = CircleShape
+                    )
+                    .padding(6.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "$dueDate, $dueTime",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.primary
+                )
+            }
         }
     }
 }
@@ -101,7 +113,9 @@ fun TaskCardPreviewLight() {
             taskDescription = "In the evening",
             taskDueDate = LocalDate.now(),
             taskDueTime = LocalTime.now()
-        )
+        ),
+        onToggleCompleteTask = {}
+
     )
 }
 
@@ -119,6 +133,8 @@ fun TaskCardPreviewDark() {
             taskDescription = "In the evening",
             taskDueDate = LocalDate.now(),
             taskDueTime = LocalTime.now()
-        )
+        ),
+        onToggleCompleteTask = {}
+
     )
 }

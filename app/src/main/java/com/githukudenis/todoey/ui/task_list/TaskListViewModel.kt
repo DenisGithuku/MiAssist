@@ -37,6 +37,15 @@ class TaskListViewModel @Inject constructor(
             is TaskListEvent.ChangePriorityFilter -> {
                 changePriority(taskListEvent.priority)
             }
+
+            is TaskListEvent.ToggleCompleteTask -> {
+                val completed = _state.value.todos.find { task -> task.taskId == taskListEvent.taskId }?.completed ?: return
+
+                toggleCompleteTask(
+                    completed = !completed,
+                    taskId = taskListEvent.taskId
+                )
+            }
         }
     }
 
@@ -63,6 +72,12 @@ class TaskListViewModel @Inject constructor(
                     )
                 }
             }
+        }
+    }
+
+    fun toggleCompleteTask(completed: Boolean, taskId: Long) {
+        viewModelScope.launch {
+            tasksRepository.toggleCompleteTask(completed = completed, taskId = taskId)
         }
     }
 }

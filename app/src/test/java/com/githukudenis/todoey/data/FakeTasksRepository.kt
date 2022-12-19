@@ -10,29 +10,40 @@ import kotlinx.coroutines.flow.flowOf
 
 class FakeTasksRepository : TasksRepository {
 
-    private var todos = mutableListOf<TaskEntity>()
-    private var observableTodos = MutableStateFlow<List<TaskEntity>>(emptyList())
+    private var tasks = mutableListOf<TaskEntity>()
+    private var observableTasks = MutableStateFlow<List<TaskEntity>>(emptyList())
 
-    private fun refreshObservableTodos() {
-        observableTodos.value = todos
+    private fun refreshObservableTasks() {
+        observableTasks.value = tasks
     }
 
     override suspend fun addTask(taskEntity: TaskEntity) {
-        todos.add(taskEntity)
-        refreshObservableTodos()
+        tasks.add(taskEntity)
+        refreshObservableTasks()
     }
 
     override suspend fun getAllTasks(sortType: SortType, orderType: OrderType): Flow<List<TaskEntity>> {
-        return observableTodos
+        return observableTasks
     }
 
     override suspend fun deleteTask(taskEntity: TaskEntity) {
-        todos.remove(taskEntity)
-        refreshObservableTodos()
+        tasks.remove(taskEntity)
+        refreshObservableTasks()
     }
 
     override suspend fun getTaskById(todoId: Long): Flow<TaskEntity?> {
-        val todo = observableTodos.value.find { todo -> todo.taskId == todoId }
-        return flowOf(todo)
+        val task = observableTasks.value.find { todo -> todo.taskId == todoId }
+        return flowOf(task)
+    }
+
+    override suspend fun toggleCompleteTask(completed: Boolean, taskId: Long) {
+        val taskEntity = TaskEntity(taskId = taskId, taskTitle = "")
+        tasks.add(taskEntity)
+        refreshObservableTasks()
+        observableTasks.value.find {
+            it.taskId == taskId
+        }.apply {
+            this?.completed = completed
+        }
     }
 }

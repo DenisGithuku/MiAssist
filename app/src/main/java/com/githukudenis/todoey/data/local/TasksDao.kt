@@ -11,12 +11,15 @@ interface TasksDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTask(taskEntity: TaskEntity)
 
-    @Query("SELECT * FROM todos_table WHERE taskId LIKE :todoId")
-    suspend fun getTaskById(todoId: Long): TaskEntity
+    @Query("SELECT * FROM todos_table WHERE taskId LIKE :taskId")
+    suspend fun getTaskById(taskId: Long): TaskEntity
 
-    @Query("DELETE FROM todos_table WHERE taskId LIKE :todoId")
-    suspend fun deleteTask(todoId: Long)
+    @Query("DELETE FROM todos_table WHERE taskId LIKE :taskId")
+    suspend fun deleteTask(taskId: Long)
 
     @Query("SELECT * FROM todos_table ORDER BY taskId DESC")
     suspend fun getAllTasks(): List<TaskEntity>
+
+    @Query("UPDATE todos_table SET completed = :completed WHERE taskId LIKE :taskId")
+    suspend fun toggleCompleteTask(completed: Boolean, taskId: Long)
 }

@@ -87,4 +87,12 @@ class TasksDataSource @Inject constructor(
             emit(null)
         }
     }.flowOn(Dispatchers.IO)
+
+    override suspend fun toggleCompleteTask(completed: Boolean, taskId: Long) {
+        try {
+            tasksDao.toggleCompleteTask(completed = completed, taskId = taskId)
+        } catch (e: Exception) {
+            Log.e(TAG, "toggleCompleteTask: ${e.localizedMessage}")
+        }
+    }
 }

@@ -28,7 +28,7 @@ fun PriorityChip(
     }
 
     InputChip(
-        modifier = modifier.padding(4.dp),
+        modifier = modifier.padding(6.dp),
         border = InputChipDefaults.inputChipBorder(
             borderWidth = 0.dp,
             selectedBorderWidth = 0.dp
