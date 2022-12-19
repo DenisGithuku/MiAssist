@@ -5,6 +5,7 @@ import com.githukudenis.todoey.data.local.Priority
 import com.githukudenis.todoey.data.local.TaskEntity
 import com.githukudenis.todoey.util.MainCoroutineRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.*
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -65,5 +66,14 @@ class TaskListViewModelTest {
 
         taskListViewModel.changePriority(priority = Priority.MODERATE)
         assertEquals(Priority.MODERATE, taskListViewModel.state.value.selectedPriority)
+    }
+
+    @Test
+    fun toggleCompleteTask() = runTest {
+        val testTask = TaskEntity(taskId = 45, taskTitle = "", completed = true)
+        testRepository.addTask(testTask)
+        testRepository.toggleCompleteTask(completed = !testTask.completed, taskId = 45)
+        val task = testRepository.getTaskById(todoId = testTask.taskId ?: return@runTest)
+        assertEquals(false, task.first()?.completed)
     }
 }

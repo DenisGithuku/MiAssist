@@ -23,7 +23,7 @@ import java.time.LocalTime
 
 @RunWith(AndroidJUnit4::class)
 @SmallTest
-class TodoeyDaoTest {
+class TasksDaoTest {
 
     private lateinit var tasksDatabase: TasksDatabase
     private lateinit var tasksDao: TasksDao
@@ -162,5 +162,22 @@ class TodoeyDaoTest {
 
         val taskById = tasksDao.getTaskById(task3.taskId ?: return@runTest)
         assertThat(taskById).isEqualTo(task3)
+    }
+
+    @Test
+    fun toggleCompleteTask() = runTest {
+        val task = TaskEntity(
+            taskId = 3,
+            taskTitle = "Some title",
+            taskDescription = "Some description",
+            taskDueTime = LocalTime.now(),
+            taskDueDate = LocalDate.now()
+        )
+        tasksDao.insertTask(task)
+        assertThat(tasksDao.getAllTasks().first().completed).isFalse()
+
+        tasksDao.toggleCompleteTask(completed = true, taskId = task.taskId ?: return@runTest)
+
+        assertThat(tasksDao.getAllTasks().first().completed).isTrue()
     }
 }
