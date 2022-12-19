@@ -1,6 +1,6 @@
 package com.githukudenis.todoey.ui.task_list
 
-import com.githukudenis.todoey.data.FakeTodoRepository
+import com.githukudenis.todoey.data.FakeTasksRepository
 import com.githukudenis.todoey.data.local.Priority
 import com.githukudenis.todoey.data.local.TaskEntity
 import com.githukudenis.todoey.util.MainCoroutineRule
@@ -17,17 +17,17 @@ class TaskListViewModelTest {
     @get:Rule
     var mainCoroutineRule = MainCoroutineRule()
 
-    private lateinit var testRepository: FakeTodoRepository
+    private lateinit var testRepository: FakeTasksRepository
     private lateinit var taskListViewModel: TaskListViewModel
 
     @Before
     fun setUp() {
-        testRepository = FakeTodoRepository()
+        testRepository = FakeTasksRepository()
         taskListViewModel = TaskListViewModel(testRepository)
     }
 
     @Test
-    fun getAllTodos() = runTest {
+    fun getAllTasks() = runTest {
         assertEquals(0, taskListViewModel.state.value.todos.size)
 
         testRepository.addTask(TaskEntity(taskTitle = ""))
@@ -47,7 +47,7 @@ class TaskListViewModelTest {
     }
 
     @Test
-    fun filterTodosByPriority() = runTest {
+    fun filterTasksByPriority() = runTest {
         testRepository.addTask(TaskEntity(taskTitle = ""))
         testRepository.addTask(TaskEntity(taskTitle = ""))
         testRepository.addTask(TaskEntity(taskTitle = ""))

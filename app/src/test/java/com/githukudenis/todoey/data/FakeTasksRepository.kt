@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flowOf
 
-class FakeTodoRepository : TasksRepository {
+class FakeTasksRepository : TasksRepository {
 
     private var todos = mutableListOf<TaskEntity>()
     private var observableTodos = MutableStateFlow<List<TaskEntity>>(emptyList())

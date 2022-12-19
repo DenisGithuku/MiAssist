@@ -2,10 +2,10 @@ package com.githukudenis.todoey.di
 
 import android.content.Context
 import androidx.room.Room
-import com.githukudenis.todoey.data.local.TasksDataSource
-import com.githukudenis.todoey.data.local.TasksRepositoryImpl
-import com.githukudenis.todoey.data.local.TasksDatabase
 import com.githukudenis.todoey.data.local.TasksDao
+import com.githukudenis.todoey.data.local.TasksDataSource
+import com.githukudenis.todoey.data.local.TasksDatabase
+import com.githukudenis.todoey.data.local.TasksRepositoryImpl
 import com.githukudenis.todoey.domain.TasksRepository
 import dagger.Module
 import dagger.Provides
