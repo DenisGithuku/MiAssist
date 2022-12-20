@@ -37,14 +37,6 @@ class TaskDetailViewModel @Inject constructor(
                     )
                 }
             }
-            is TaskDetailEvent.DismissUserMessage -> {
-                val userMessages = _state.value.userMessages.filterNot { userMessage -> userMessage == taskDetailEvent.userMessage }
-                _state.update { prevState ->
-                    prevState.copy(
-                        userMessages = userMessages
-                    )
-                }
-            }
             is TaskDetailEvent.SaveTask -> {
                 saveTask(taskDetailEvent.taskEntity)
             }
@@ -53,6 +45,14 @@ class TaskDetailViewModel @Inject constructor(
                 userMessages.add(taskDetailEvent.userMessage)
                 _state.update { prevState ->
                     prevState.copy(userMessages = userMessages)
+                }
+            }
+            is TaskDetailEvent.DismissUserMessage -> {
+                val userMessages = _state.value.userMessages.filterNot { userMessage -> userMessage == taskDetailEvent.userMessage }
+                _state.update { prevState ->
+                    prevState.copy(
+                        userMessages = userMessages
+                    )
                 }
             }
         }
@@ -72,7 +72,15 @@ class TaskDetailViewModel @Inject constructor(
 
     fun saveTask(taskEntity: TaskEntity) {
         viewModelScope.launch {
-            tasksRepository.addTask(taskEntity)
+            tasksRepository.updateTask(
+                taskTitle = taskEntity.taskTitle,
+                taskDescription = taskEntity.taskDescription ?: return@launch,
+                taskDueDate = taskEntity.taskDueDate ?: return@launch,
+                taskDueTime = taskEntity.taskDueTime ?: return@launch,
+                completed = taskEntity.completed,
+                priority = taskEntity.priority,
+                taskId = _state.value.taskDetail?.taskId ?: return@launch
+            )
         }
     }
 }

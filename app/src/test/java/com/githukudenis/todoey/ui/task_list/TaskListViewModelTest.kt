@@ -29,7 +29,7 @@ class TaskListViewModelTest {
 
     @Test
     fun getAllTasks() = runTest {
-        assertEquals(0, taskListViewModel.state.value.todos.size)
+        assertEquals(0, taskListViewModel.state.value.tasks.size)
 
         testRepository.addTask(TaskEntity(taskTitle = ""))
         testRepository.addTask(TaskEntity(taskTitle = ""))
@@ -37,7 +37,7 @@ class TaskListViewModelTest {
 
         taskListViewModel.getAllTodos()
 
-        assertEquals(3, taskListViewModel.state.value.todos.size)
+        assertEquals(3, taskListViewModel.state.value.tasks.size)
     }
 
     @Test
@@ -54,7 +54,7 @@ class TaskListViewModelTest {
         testRepository.addTask(TaskEntity(taskTitle = ""))
 
         taskListViewModel.changePriority(priority = Priority.LOW)
-        val firstTodo = taskListViewModel.state.value.todos.first()
+        val firstTodo = taskListViewModel.state.value.tasks.first()
         assertEquals(Priority.LOW, firstTodo.priority)
     }
 

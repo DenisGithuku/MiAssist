@@ -128,11 +128,11 @@ private fun TaskDetailScreen(
     val timeDialogState = rememberMaterialDialogState()
 
     var pickedDate by remember {
-        mutableStateOf(taskDetail.taskDueDate)
+        mutableStateOf(taskDetail.taskDueDate ?: LocalDate.now())
     }
 
     var pickedTime by remember {
-        mutableStateOf(taskDetail.taskDueTime)
+        mutableStateOf(taskDetail.taskDueTime ?: LocalTime.now())
     }
 
     val saveButtonEnabled by remember {
@@ -270,7 +270,7 @@ private fun TaskDetailScreen(
         }
     ) {
         datepicker(
-            initialDate = pickedDate ?: LocalDate.now(),
+            initialDate = pickedDate,
             title = context.getString(R.string.date_dialog_title),
             allowedDateValidator = { date ->
                 date.dayOfMonth >= LocalDate.now().dayOfMonth
@@ -293,7 +293,7 @@ private fun TaskDetailScreen(
         }
     ) {
         timepicker(
-            initialTime = pickedTime?.plusHours(1) ?: LocalTime.now(),
+            initialTime = pickedTime.plusHours(1),
             title = context.getString(R.string.time_dialog_title)
         ) { time ->
             pickedTime = time

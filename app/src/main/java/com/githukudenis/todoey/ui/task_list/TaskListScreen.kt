@@ -1,5 +1,6 @@
 package com.githukudenis.todoey.ui.task_list
 
+import androidx.compose.animation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -10,7 +11,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -24,7 +24,7 @@ import com.githukudenis.todoey.data.local.Priority
 import com.githukudenis.todoey.data.local.TaskEntity
 import com.githukudenis.todoey.ui.task_list.components.TaskCard
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalLifecycleComposeApi::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLifecycleComposeApi::class, ExperimentalAnimationApi::class)
 @Composable
 fun TaskListScreen(
     onNewTask: () -> Unit,
@@ -54,27 +54,31 @@ fun TaskListScreen(
         Column(
             modifier = Modifier.fillMaxSize().padding(contentPadding)
         ) {
-            if (state.todos.isEmpty()) {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
+            AnimatedVisibility(visible = state.tasks.isNotEmpty()) {
+                FilterTaskSection(
+                    selectedPriority = state.selectedPriority,
+                    onFilterByPriority = { priority ->
+                        taskListViewModel.onEvent(TaskListEvent.ChangePriorityFilter(priority = priority))
+                    }
+                )
+            }
+            AnimatedContent(targetState = state.tasks.isEmpty()) { taskListEmpty ->
+                if (taskListEmpty) {
                     Text(
                         text = context.getString(R.string.no_tasks_status),
                         style = MaterialTheme.typography.bodySmall,
                         textAlign = TextAlign.Center
                     )
+                } else {
+                    TaskList(
+                        todoList = state.tasks,
+                        onOpenTodoDetails = onOpenTodoDetails,
+                        onToggleCompleteTask = { taskId ->
+                            taskListViewModel.onEvent(TaskListEvent.ToggleCompleteTask(taskId))
+                        }
+                    )
                 }
             }
-            FilterTaskSection(
-                selectedPriority = state.selectedPriority,
-                onFilterByPriority = { priority ->
-                    taskListViewModel.onEvent(TaskListEvent.ChangePriorityFilter(priority = priority))
-                }
-            )
-            TaskList(todoList = state.todos, onOpenTodoDetails = onOpenTodoDetails, onToggleCompleteTask = { taskId ->
-                taskListViewModel.onEvent(TaskListEvent.ToggleCompleteTask(taskId))
-            })
         }
     }
 }

@@ -4,6 +4,8 @@ import com.githukudenis.todoey.domain.TasksRepository
 import com.githukudenis.todoey.util.OrderType
 import com.githukudenis.todoey.util.SortType
 import kotlinx.coroutines.flow.Flow
+import java.time.LocalDate
+import java.time.LocalTime
 import javax.inject.Inject
 
 class TasksRepositoryImpl @Inject constructor(
@@ -25,7 +27,23 @@ class TasksRepositoryImpl @Inject constructor(
         return tasksDataSource.getTaskById(todoId)
     }
 
-    override suspend fun toggleCompleteTask(completed: Boolean, taskId: Long) {
-        return tasksDataSource.toggleCompleteTask(completed = completed, taskId = taskId)
+    override suspend fun updateTask(
+        taskTitle: String,
+        taskDescription: String,
+        taskDueDate: LocalDate,
+        taskDueTime: LocalTime,
+        completed: Boolean,
+        priority: Priority,
+        taskId: Long
+    ) {
+        return tasksDataSource.updateTask(
+            taskTitle = taskTitle,
+            taskDescription = taskDescription,
+            taskDueDate = taskDueDate,
+            taskDueTime = taskDueTime,
+            completed = completed,
+            priority = priority,
+            taskId = taskId
+        )
     }
 }

@@ -21,9 +21,7 @@ fun TodoeyNavigator(
                         launchSingleTop = true
                         popUpTo(TodoeyScreen.AddTask.routeId) {
                             inclusive = true
-                            saveState = true
                         }
-                        restoreState = true
                     }
                 },
                 onOpenTodoDetails = { taskId ->
@@ -31,9 +29,7 @@ fun TodoeyNavigator(
                         launchSingleTop = true
                         popUpTo(TodoeyScreen.TaskDetail.routeId) {
                             inclusive = true
-                            saveState = true
                         }
-                        restoreState = true
                     }
                 }
             )

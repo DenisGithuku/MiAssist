@@ -3,6 +3,7 @@ package com.githukudenis.todoey.ui.task_list
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.githukudenis.todoey.data.local.Priority
+import com.githukudenis.todoey.data.local.TaskEntity
 import com.githukudenis.todoey.domain.TasksRepository
 import com.githukudenis.todoey.util.OrderType
 import com.githukudenis.todoey.util.SortType
@@ -39,23 +40,25 @@ class TaskListViewModel @Inject constructor(
             }
 
             is TaskListEvent.ToggleCompleteTask -> {
-                val completed = _state.value.todos.find { task -> task.taskId == taskListEvent.taskId }?.completed ?: return
-
-                toggleCompleteTask(
-                    completed = !completed,
-                    taskId = taskListEvent.taskId
+                val taskEntity = _state.value.tasks.find { task -> task.taskId == taskListEvent.taskId }
+                taskEntity?.copy(
+                    completed = !taskEntity.completed
+                ) ?: return
+                updateTask(
+                    taskEntity = taskEntity
                 )
+                getAllTodos()
             }
         }
     }
 
     fun changePriority(priority: Priority) {
         viewModelScope.launch {
-            tasksRepository.getAllTasks(sortType = SortType.DUE_DATE, orderType = OrderType.DESCENDING).collect { todos ->
-                val filteredTodos = todos.filter { todoEntity -> todoEntity.priority == priority }
+            tasksRepository.getAllTasks(sortType = SortType.DUE_DATE, orderType = OrderType.DESCENDING).collect { tasks ->
+                val filteredTasks = tasks.filter { todoEntity -> todoEntity.priority == priority }
                 _state.update {
                     it.copy(
-                        todos = filteredTodos,
+                        tasks = filteredTasks,
                         selectedPriority = priority
                     )
                 }
@@ -65,19 +68,28 @@ class TaskListViewModel @Inject constructor(
 
     fun getAllTodos(sortType: SortType = SortType.DUE_DATE, orderType: OrderType = OrderType.DESCENDING) {
         viewModelScope.launch {
-            tasksRepository.getAllTasks(sortType = sortType, orderType = orderType).collect { todos ->
+            tasksRepository.getAllTasks(sortType = sortType, orderType = orderType).collect { tasks ->
                 _state.update {
+                    val filteredTasks = tasks.filter { task -> task.priority == _state.value.selectedPriority }
                     it.copy(
-                        todos = todos
+                        tasks = filteredTasks
                     )
                 }
             }
         }
     }
 
-    fun toggleCompleteTask(completed: Boolean, taskId: Long) {
+    fun updateTask(taskEntity: TaskEntity) {
         viewModelScope.launch {
-            tasksRepository.toggleCompleteTask(completed = completed, taskId = taskId)
+            tasksRepository.updateTask(
+                taskTitle = taskEntity.taskTitle,
+                taskDescription = taskEntity.taskDescription ?: return@launch,
+                taskDueDate = taskEntity.taskDueDate ?: return@launch,
+                taskDueTime = taskEntity.taskDueTime ?: return@launch,
+                completed = taskEntity.completed,
+                priority = taskEntity.priority,
+                taskId = taskEntity.taskId ?: return@launch
+            )
         }
     }
 }

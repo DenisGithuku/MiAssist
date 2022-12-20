@@ -8,6 +8,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import java.time.LocalDate
+import java.time.LocalTime
 import javax.inject.Inject
 
 private const val TAG = "TodosDataSourceError"
@@ -88,9 +90,26 @@ class TasksDataSource @Inject constructor(
         }
     }.flowOn(Dispatchers.IO)
 
-    override suspend fun toggleCompleteTask(completed: Boolean, taskId: Long) {
+    override suspend fun updateTask(
+        taskTitle: String,
+        taskDescription: String,
+        taskDueDate: LocalDate,
+        taskDueTime: LocalTime,
+        completed: Boolean,
+        priority: Priority,
+        taskId: Long
+    ) {
         try {
-            tasksDao.toggleCompleteTask(completed = completed, taskId = taskId)
+            tasksDao.updateTask(
+                taskTitle = taskTitle,
+                taskDescription = taskDescription,
+                taskDueDate = taskDueDate,
+                taskDueTime = taskDueTime,
+                completed = completed,
+                priority = priority,
+                taskId = taskId
+
+            )
         } catch (e: Exception) {
             Log.e(TAG, "toggleCompleteTask: ${e.localizedMessage}")
         }

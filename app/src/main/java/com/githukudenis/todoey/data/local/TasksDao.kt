@@ -4,6 +4,8 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import java.time.LocalDate
+import java.time.LocalTime
 
 @Dao
 interface TasksDao {
@@ -20,6 +22,22 @@ interface TasksDao {
     @Query("SELECT * FROM todos_table ORDER BY taskId DESC")
     suspend fun getAllTasks(): List<TaskEntity>
 
-    @Query("UPDATE todos_table SET completed = :completed WHERE taskId LIKE :taskId")
-    suspend fun toggleCompleteTask(completed: Boolean, taskId: Long)
+    @Query(
+        "UPDATE todos_table SET taskTitle = :taskTitle," +
+            " taskDescription = :taskDescription," +
+            " completed = :completed," +
+            " taskDueDate = :taskDueDate, " +
+            " taskDueTime = :taskDueTime, " +
+            " priority = :priority " +
+            " WHERE taskId LIKE :taskId"
+    )
+    suspend fun updateTask(
+        taskTitle: String,
+        taskDescription: String,
+        taskDueDate: LocalDate,
+        taskDueTime: LocalTime,
+        completed: Boolean,
+        priority: Priority,
+        taskId: Long
+    )
 }

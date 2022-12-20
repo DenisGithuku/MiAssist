@@ -176,7 +176,15 @@ class TasksDaoTest {
         tasksDao.insertTask(task)
         assertThat(tasksDao.getAllTasks().first().completed).isFalse()
 
-        tasksDao.toggleCompleteTask(completed = true, taskId = task.taskId ?: return@runTest)
+        tasksDao.updateTask(
+            completed = true,
+            taskTitle = task.taskTitle,
+            taskDescription = task.taskDescription ?: return@runTest,
+            taskDueDate = task.taskDueDate ?: return@runTest,
+            taskDueTime = task.taskDueTime ?: return@runTest,
+            priority = task.priority,
+            taskId = task.taskId ?: return@runTest
+        )
 
         assertThat(tasksDao.getAllTasks().first().completed).isTrue()
     }
