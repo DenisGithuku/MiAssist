@@ -81,7 +81,7 @@ class TaskListViewModel @Inject constructor(
 
     fun updateTask(taskEntity: TaskEntity) {
         viewModelScope.launch {
-            tasksRepository.updateTask(
+            val task = TaskEntity(
                 taskTitle = taskEntity.taskTitle,
                 taskDescription = taskEntity.taskDescription ?: return@launch,
                 taskDueDate = taskEntity.taskDueDate ?: return@launch,
@@ -89,6 +89,9 @@ class TaskListViewModel @Inject constructor(
                 completed = taskEntity.completed,
                 priority = taskEntity.priority,
                 taskId = taskEntity.taskId ?: return@launch
+            )
+            tasksRepository.updateTask(
+                taskEntity
             )
         }
     }

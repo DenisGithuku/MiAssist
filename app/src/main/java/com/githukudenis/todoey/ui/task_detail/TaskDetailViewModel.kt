@@ -72,14 +72,17 @@ class TaskDetailViewModel @Inject constructor(
 
     fun saveTask(taskEntity: TaskEntity) {
         viewModelScope.launch {
-            tasksRepository.updateTask(
+            val task = TaskEntity(
                 taskTitle = taskEntity.taskTitle,
                 taskDescription = taskEntity.taskDescription ?: return@launch,
                 taskDueDate = taskEntity.taskDueDate ?: return@launch,
                 taskDueTime = taskEntity.taskDueTime ?: return@launch,
                 completed = taskEntity.completed,
                 priority = taskEntity.priority,
-                taskId = _state.value.taskDetail?.taskId ?: return@launch
+                taskId = taskEntity.taskId ?: return@launch
+            )
+            tasksRepository.updateTask(
+                taskEntity
             )
         }
     }

@@ -36,14 +36,10 @@ class FakeTasksRepository : TasksRepository {
         return flowOf(task)
     }
 
-    override suspend fun toggleCompleteTask(completed: Boolean, taskId: Long) {
-        val taskEntity = TaskEntity(taskId = taskId, taskTitle = "")
+    override suspend fun updateTask(
+        taskEntity: TaskEntity
+    ) {
         tasks.add(taskEntity)
         refreshObservableTasks()
-        observableTasks.value.find {
-            it.taskId == taskId
-        }.apply {
-            this?.completed = completed
-        }
     }
 }

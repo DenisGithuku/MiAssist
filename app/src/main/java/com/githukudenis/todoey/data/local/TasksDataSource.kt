@@ -8,8 +8,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import java.time.LocalDate
-import java.time.LocalTime
 import javax.inject.Inject
 
 private const val TAG = "TodosDataSourceError"
@@ -91,23 +89,17 @@ class TasksDataSource @Inject constructor(
     }.flowOn(Dispatchers.IO)
 
     override suspend fun updateTask(
-        taskTitle: String,
-        taskDescription: String,
-        taskDueDate: LocalDate,
-        taskDueTime: LocalTime,
-        completed: Boolean,
-        priority: Priority,
-        taskId: Long
+        taskEntity: TaskEntity
     ) {
         try {
             tasksDao.updateTask(
-                taskTitle = taskTitle,
-                taskDescription = taskDescription,
-                taskDueDate = taskDueDate,
-                taskDueTime = taskDueTime,
-                completed = completed,
-                priority = priority,
-                taskId = taskId
+                taskTitle = taskEntity.taskTitle,
+                taskDescription = taskEntity.taskDescription ?: return,
+                taskDueDate = taskEntity.taskDueDate ?: return,
+                taskDueTime = taskEntity.taskDueTime ?: return,
+                completed = taskEntity.completed,
+                priority = taskEntity.priority,
+                taskId = taskEntity.taskId ?: return
 
             )
         } catch (e: Exception) {

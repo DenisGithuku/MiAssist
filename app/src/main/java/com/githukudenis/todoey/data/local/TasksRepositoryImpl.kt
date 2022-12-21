@@ -4,8 +4,6 @@ import com.githukudenis.todoey.domain.TasksRepository
 import com.githukudenis.todoey.util.OrderType
 import com.githukudenis.todoey.util.SortType
 import kotlinx.coroutines.flow.Flow
-import java.time.LocalDate
-import java.time.LocalTime
 import javax.inject.Inject
 
 class TasksRepositoryImpl @Inject constructor(
@@ -28,22 +26,10 @@ class TasksRepositoryImpl @Inject constructor(
     }
 
     override suspend fun updateTask(
-        taskTitle: String,
-        taskDescription: String,
-        taskDueDate: LocalDate,
-        taskDueTime: LocalTime,
-        completed: Boolean,
-        priority: Priority,
-        taskId: Long
+        taskEntity: TaskEntity
     ) {
         return tasksDataSource.updateTask(
-            taskTitle = taskTitle,
-            taskDescription = taskDescription,
-            taskDueDate = taskDueDate,
-            taskDueTime = taskDueTime,
-            completed = completed,
-            priority = priority,
-            taskId = taskId
+            taskEntity
         )
     }
 }
