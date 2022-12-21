@@ -39,6 +39,7 @@ class FakeTasksRepository : TasksRepository {
     override suspend fun updateTask(
         taskEntity: TaskEntity
     ) {
+        tasks.remove(tasks.find { task -> task.taskId == taskEntity.taskId })
         tasks.add(taskEntity)
         refreshObservableTasks()
     }
