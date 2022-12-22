@@ -25,7 +25,11 @@ class TasksRepositoryImpl @Inject constructor(
         return tasksDataSource.getTaskById(todoId)
     }
 
-    override suspend fun toggleCompleteTask(completed: Boolean, taskId: Long) {
-        return tasksDataSource.toggleCompleteTask(completed = completed, taskId = taskId)
+    override suspend fun updateTask(
+        taskEntity: TaskEntity
+    ) {
+        return tasksDataSource.updateTask(
+            taskEntity
+        )
     }
 }

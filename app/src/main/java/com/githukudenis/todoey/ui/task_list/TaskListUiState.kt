@@ -5,7 +5,7 @@ import com.githukudenis.todoey.data.local.TaskEntity
 import com.githukudenis.todoey.util.UserMessage
 
 data class TaskListUiState(
-    val todos: List<TaskEntity> = emptyList(),
+    val tasks: List<TaskEntity> = emptyList(),
     val selectedPriority: Priority = Priority.HIGH,
     val userMessages: List<UserMessage> = emptyList()
 )

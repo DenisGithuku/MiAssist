@@ -88,12 +88,9 @@ fun TaskDetailScreen(
             state.taskDetail?.let { task ->
                 TaskDetailScreen(
                     taskDetail = task,
-                    onChangePriority = { newPriority: Priority ->
-                        taskDetailViewModel.onEvent(TaskDetailEvent.ChangeTaskPriority(priority = newPriority))
-                    },
                     priorities = state.priorities,
-                    onSaveTask = { taskEntity ->
-                        taskDetailViewModel.onEvent(TaskDetailEvent.SaveTask(taskEntity))
+                    onUpdateTask = { taskEntity ->
+                        taskDetailViewModel.onEvent(TaskDetailEvent.UpdateTask(taskEntity))
                         onSaveTask()
                     },
                     onShowUserMessage = { userMessage ->
@@ -110,9 +107,8 @@ fun TaskDetailScreen(
 private fun TaskDetailScreen(
     modifier: Modifier = Modifier,
     taskDetail: TaskEntity,
-    onChangePriority: (Priority) -> Unit,
     priorities: List<Priority>,
-    onSaveTask: (TaskEntity) -> Unit,
+    onUpdateTask: (TaskEntity) -> Unit,
     onShowUserMessage: (UserMessage) -> Unit
 ) {
     val context = LocalContext.current
@@ -124,15 +120,19 @@ private fun TaskDetailScreen(
         mutableStateOf(taskDetail.taskDescription)
     }
 
+    var priority by remember {
+        mutableStateOf(taskDetail.priority)
+    }
+
     val dateDialogState = rememberMaterialDialogState()
     val timeDialogState = rememberMaterialDialogState()
 
     var pickedDate by remember {
-        mutableStateOf(taskDetail.taskDueDate)
+        mutableStateOf(taskDetail.taskDueDate ?: LocalDate.now())
     }
 
     var pickedTime by remember {
-        mutableStateOf(taskDetail.taskDueTime)
+        mutableStateOf(taskDetail.taskDueTime ?: LocalTime.now())
     }
 
     val saveButtonEnabled by remember {
@@ -185,7 +185,11 @@ private fun TaskDetailScreen(
 
         LazyRow {
             items(items = priorities, key = { it.name }) { item: Priority ->
-                PriorityChip(selected = { item == taskDetail.priority }, onSelect = { newPriority -> onChangePriority(newPriority) }, priority = item)
+                PriorityChip(
+                    selected = { item == priority },
+                    onSelect = { newPriority -> priority = newPriority },
+                    priority = item
+                )
             }
         }
 
@@ -245,9 +249,14 @@ private fun TaskDetailScreen(
                         taskDescription = todoDescription,
                         taskDueTime = pickedTime,
                         taskDueDate = pickedDate,
-                        priority = taskDetail.priority
+                        priority = priority,
+                        taskId = taskDetail.taskId
                     )
-                    onSaveTask(taskEntity)
+                    if (taskDetail == taskEntity) {
+                        return@Button
+                    } else {
+                        onUpdateTask(taskEntity)
+                    }
                 }
             }
         ) {
@@ -270,7 +279,7 @@ private fun TaskDetailScreen(
         }
     ) {
         datepicker(
-            initialDate = pickedDate ?: LocalDate.now(),
+            initialDate = pickedDate,
             title = context.getString(R.string.date_dialog_title),
             allowedDateValidator = { date ->
                 date.dayOfMonth >= LocalDate.now().dayOfMonth
@@ -293,7 +302,7 @@ private fun TaskDetailScreen(
         }
     ) {
         timepicker(
-            initialTime = pickedTime?.plusHours(1) ?: LocalTime.now(),
+            initialTime = pickedTime.plusHours(1),
             title = context.getString(R.string.time_dialog_title)
         ) { time ->
             pickedTime = time

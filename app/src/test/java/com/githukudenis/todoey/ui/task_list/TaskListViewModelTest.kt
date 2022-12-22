@@ -29,15 +29,15 @@ class TaskListViewModelTest {
 
     @Test
     fun getAllTasks() = runTest {
-        assertEquals(0, taskListViewModel.state.value.todos.size)
+        assertEquals(0, taskListViewModel.state.value.tasks.size)
 
-        testRepository.addTask(TaskEntity(taskTitle = ""))
-        testRepository.addTask(TaskEntity(taskTitle = ""))
-        testRepository.addTask(TaskEntity(taskTitle = ""))
+        testRepository.addTask(TaskEntity(taskTitle = "", priority = Priority.HIGH))
+        testRepository.addTask(TaskEntity(taskTitle = "", priority = Priority.HIGH))
+        testRepository.addTask(TaskEntity(taskTitle = "", priority = Priority.HIGH))
 
         taskListViewModel.getAllTodos()
 
-        assertEquals(3, taskListViewModel.state.value.todos.size)
+        assertEquals(3, taskListViewModel.state.value.tasks.size)
     }
 
     @Test
@@ -54,7 +54,7 @@ class TaskListViewModelTest {
         testRepository.addTask(TaskEntity(taskTitle = ""))
 
         taskListViewModel.changePriority(priority = Priority.LOW)
-        val firstTodo = taskListViewModel.state.value.todos.first()
+        val firstTodo = taskListViewModel.state.value.tasks.first()
         assertEquals(Priority.LOW, firstTodo.priority)
     }
 
@@ -70,9 +70,9 @@ class TaskListViewModelTest {
 
     @Test
     fun toggleCompleteTask() = runTest {
-        val testTask = TaskEntity(taskId = 45, taskTitle = "", completed = true)
+        val testTask = TaskEntity(taskId = 45, taskTitle = "", completed = true, priority = Priority.HIGH)
         testRepository.addTask(testTask)
-        testRepository.toggleCompleteTask(completed = !testTask.completed, taskId = 45)
+        testRepository.updateTask(testTask.copy(completed = !testTask.completed))
         val task = testRepository.getTaskById(todoId = testTask.taskId ?: return@runTest)
         assertEquals(false, task.first()?.completed)
     }

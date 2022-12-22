@@ -29,11 +29,14 @@ class TaskDetailViewModelTest {
 
     @Test
     fun onEvent() = runTest {
-        val task = TaskEntity(taskTitle = "")
-        val event = TaskDetailEvent.SaveTask(task)
+        val task = TaskEntity(taskId = 40, taskTitle = "", taskDescription = "")
+        tasksRepository.addTask(task)
+        taskDetailViewModel.getTaskById(40)
+        val newTask = taskDetailViewModel.state.first().taskDetail!!.copy(taskTitle = "New Title", taskDescription = "New description")
+        val event = TaskDetailEvent.UpdateTask(newTask)
         taskDetailViewModel.onEvent(event)
         val tasks = tasksRepository.getAllTasks(SortType.DUE_DATE, OrderType.ASCENDING).first()
-        assertTrue(tasks.any { it == task })
+        assertTrue(tasks.any { it == newTask })
     }
 
     @Test

@@ -27,7 +27,7 @@ fun TaskCard(
     onToggleCompleteTask: (Long) -> Unit,
     taskEntity: TaskEntity
 ) {
-    val dueDate = remember {
+    val dueDate = remember(taskEntity.taskDueDate) {
         when (taskEntity.taskDueDate?.dayOfMonth) {
             LocalDate.now().dayOfMonth - 1 -> {
                 "Yesterday"
@@ -42,7 +42,7 @@ fun TaskCard(
             }
 
             else -> {
-                "${LocalDate.now().month.name} ${LocalDate.now().dayOfMonth}"
+                "${taskEntity.taskDueDate!!.month.name.lowercase().replaceFirstChar { firstChar -> firstChar.uppercaseChar() }} ${taskEntity.taskDueDate.dayOfMonth}"
             }
         }
     }
