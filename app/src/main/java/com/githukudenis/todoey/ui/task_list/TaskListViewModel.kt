@@ -41,13 +41,16 @@ class TaskListViewModel @Inject constructor(
 
             is TaskListEvent.ToggleCompleteTask -> {
                 val taskEntity = _state.value.tasks.find { task -> task.taskId == taskListEvent.taskId }
-                taskEntity?.copy(
-                    completed = !taskEntity.completed
-                ) ?: return
-                updateTask(
-                    taskEntity = taskEntity
-                )
-                getAllTodos()
+                taskEntity?.let { task ->
+                    task.copy(
+                        completed = !taskEntity.completed
+                    ).also { updatedTask ->
+                        updateTask(
+                            taskEntity = updatedTask
+                        )
+                        getAllTodos()
+                    }
+                }
             }
         }
     }
@@ -81,15 +84,6 @@ class TaskListViewModel @Inject constructor(
 
     fun updateTask(taskEntity: TaskEntity) {
         viewModelScope.launch {
-            val task = TaskEntity(
-                taskTitle = taskEntity.taskTitle,
-                taskDescription = taskEntity.taskDescription ?: return@launch,
-                taskDueDate = taskEntity.taskDueDate ?: return@launch,
-                taskDueTime = taskEntity.taskDueTime ?: return@launch,
-                completed = taskEntity.completed,
-                priority = taskEntity.priority,
-                taskId = taskEntity.taskId ?: return@launch
-            )
             tasksRepository.updateTask(
                 taskEntity
             )

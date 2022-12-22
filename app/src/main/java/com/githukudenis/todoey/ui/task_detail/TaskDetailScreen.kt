@@ -88,12 +88,9 @@ fun TaskDetailScreen(
             state.taskDetail?.let { task ->
                 TaskDetailScreen(
                     taskDetail = task,
-                    onChangePriority = { newPriority: Priority ->
-                        taskDetailViewModel.onEvent(TaskDetailEvent.ChangeTaskPriority(priority = newPriority))
-                    },
                     priorities = state.priorities,
-                    onSaveTask = { taskEntity ->
-                        taskDetailViewModel.onEvent(TaskDetailEvent.SaveTask(taskEntity))
+                    onUpdateTask = { taskEntity ->
+                        taskDetailViewModel.onEvent(TaskDetailEvent.UpdateTask(taskEntity))
                         onSaveTask()
                     },
                     onShowUserMessage = { userMessage ->
@@ -110,9 +107,8 @@ fun TaskDetailScreen(
 private fun TaskDetailScreen(
     modifier: Modifier = Modifier,
     taskDetail: TaskEntity,
-    onChangePriority: (Priority) -> Unit,
     priorities: List<Priority>,
-    onSaveTask: (TaskEntity) -> Unit,
+    onUpdateTask: (TaskEntity) -> Unit,
     onShowUserMessage: (UserMessage) -> Unit
 ) {
     val context = LocalContext.current
@@ -122,6 +118,10 @@ private fun TaskDetailScreen(
     }
     var todoDescription by remember {
         mutableStateOf(taskDetail.taskDescription)
+    }
+
+    var priority by remember {
+        mutableStateOf(taskDetail.priority)
     }
 
     val dateDialogState = rememberMaterialDialogState()
@@ -185,7 +185,11 @@ private fun TaskDetailScreen(
 
         LazyRow {
             items(items = priorities, key = { it.name }) { item: Priority ->
-                PriorityChip(selected = { item == taskDetail.priority }, onSelect = { newPriority -> onChangePriority(newPriority) }, priority = item)
+                PriorityChip(
+                    selected = { item == priority },
+                    onSelect = { newPriority -> priority = newPriority },
+                    priority = item
+                )
             }
         }
 
@@ -245,9 +249,14 @@ private fun TaskDetailScreen(
                         taskDescription = todoDescription,
                         taskDueTime = pickedTime,
                         taskDueDate = pickedDate,
-                        priority = taskDetail.priority
+                        priority = priority,
+                        taskId = taskDetail.taskId
                     )
-                    onSaveTask(taskEntity)
+                    if (taskDetail == taskEntity) {
+                        return@Button
+                    } else {
+                        onUpdateTask(taskEntity)
+                    }
                 }
             }
         ) {

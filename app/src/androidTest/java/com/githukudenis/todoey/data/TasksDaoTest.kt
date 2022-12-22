@@ -165,7 +165,7 @@ class TasksDaoTest {
     }
 
     @Test
-    fun toggleCompleteTask() = runTest {
+    fun updateTask() = runTest {
         val task = TaskEntity(
             taskId = 3,
             taskTitle = "Some title",
@@ -176,16 +176,18 @@ class TasksDaoTest {
         tasksDao.insertTask(task)
         assertThat(tasksDao.getAllTasks().first().completed).isFalse()
 
+        val newTask = task.copy(taskTitle = "New title", taskDescription = "New description")
+
         tasksDao.updateTask(
-            completed = true,
-            taskTitle = task.taskTitle,
-            taskDescription = task.taskDescription ?: return@runTest,
-            taskDueDate = task.taskDueDate ?: return@runTest,
-            taskDueTime = task.taskDueTime ?: return@runTest,
-            priority = task.priority,
-            taskId = task.taskId ?: return@runTest
+            completed = newTask.completed,
+            taskTitle = newTask.taskTitle,
+            taskDescription = newTask.taskDescription ?: return@runTest,
+            taskDueDate = newTask.taskDueDate ?: return@runTest,
+            taskDueTime = newTask.taskDueTime ?: return@runTest,
+            priority = newTask.priority,
+            taskId = newTask.taskId ?: return@runTest
         )
 
-        assertThat(tasksDao.getAllTasks().first().completed).isTrue()
+        assertThat(tasksDao.getTaskById(task.taskId!!) != task)
     }
 }

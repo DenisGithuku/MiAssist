@@ -30,14 +30,7 @@ class TaskDetailViewModel @Inject constructor(
 
     fun onEvent(taskDetailEvent: TaskDetailEvent) {
         when (taskDetailEvent) {
-            is TaskDetailEvent.ChangeTaskPriority -> {
-                _state.update { prevState ->
-                    prevState.copy(
-                        taskDetail = _state.value.taskDetail?.copy(priority = taskDetailEvent.priority)
-                    )
-                }
-            }
-            is TaskDetailEvent.SaveTask -> {
+            is TaskDetailEvent.UpdateTask -> {
                 saveTask(taskDetailEvent.taskEntity)
             }
             is TaskDetailEvent.ShowUserMessage -> {
@@ -72,18 +65,7 @@ class TaskDetailViewModel @Inject constructor(
 
     fun saveTask(taskEntity: TaskEntity) {
         viewModelScope.launch {
-            val task = TaskEntity(
-                taskTitle = taskEntity.taskTitle,
-                taskDescription = taskEntity.taskDescription ?: return@launch,
-                taskDueDate = taskEntity.taskDueDate ?: return@launch,
-                taskDueTime = taskEntity.taskDueTime ?: return@launch,
-                completed = taskEntity.completed,
-                priority = taskEntity.priority,
-                taskId = taskEntity.taskId ?: return@launch
-            )
-            tasksRepository.updateTask(
-                taskEntity
-            )
+            tasksRepository.updateTask(taskEntity)
         }
     }
 }

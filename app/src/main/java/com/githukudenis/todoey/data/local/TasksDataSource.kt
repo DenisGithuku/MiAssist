@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
-private const val TAG = "TodosDataSourceError"
+private const val TAG = "TasksDataSourceError"
 
 class TasksDataSource @Inject constructor(
     private val tasksDao: TasksDao
@@ -22,7 +22,7 @@ class TasksDataSource @Inject constructor(
     override suspend fun getAllTasks(
         sortType: SortType,
         orderType: OrderType
-    ): Flow<List<TaskEntity>> = flow<List<TaskEntity>> {
+    ): Flow<List<TaskEntity>> = flow {
         try {
             val todos = tasksDao.getAllTasks()
             when (orderType) {
@@ -78,7 +78,7 @@ class TasksDataSource @Inject constructor(
         }
     }
 
-    override suspend fun getTaskById(todoId: Long): Flow<TaskEntity?> = flow<TaskEntity?> {
+    override suspend fun getTaskById(todoId: Long): Flow<TaskEntity?> = flow {
         try {
             val todo = tasksDao.getTaskById(todoId)
             emit(todo)

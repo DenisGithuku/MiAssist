@@ -10,6 +10,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -34,6 +35,9 @@ fun TaskListScreen(
     val state by taskListViewModel.state.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
+    val showEmptyTasksMessage = remember(state.tasks) {
+        mutableStateOf(state.tasks.isEmpty())
+    }
 
     Scaffold(
         snackbarHost = {
@@ -54,16 +58,15 @@ fun TaskListScreen(
         Column(
             modifier = Modifier.fillMaxSize().padding(contentPadding)
         ) {
-            AnimatedVisibility(visible = state.tasks.isNotEmpty()) {
-                FilterTaskSection(
-                    selectedPriority = state.selectedPriority,
-                    onFilterByPriority = { priority ->
-                        taskListViewModel.onEvent(TaskListEvent.ChangePriorityFilter(priority = priority))
-                    }
-                )
-            }
-            AnimatedContent(targetState = state.tasks.isEmpty()) { taskListEmpty ->
-                if (taskListEmpty) {
+            FilterTaskSection(
+                selectedPriority = state.selectedPriority,
+                onFilterByPriority = { priority ->
+                    taskListViewModel.onEvent(TaskListEvent.ChangePriorityFilter(priority = priority))
+                }
+            )
+
+            AnimatedContent(targetState = showEmptyTasksMessage.value) { showMessage ->
+                if (showMessage) {
                     Text(
                         text = context.getString(R.string.no_tasks_status),
                         style = MaterialTheme.typography.bodySmall,
