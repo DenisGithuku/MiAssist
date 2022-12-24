@@ -9,17 +9,20 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.flowWithLifecycle
 import com.githukudenis.todoey.R
 import com.githukudenis.todoey.data.local.Priority
 import com.githukudenis.todoey.data.local.TaskEntity
@@ -32,11 +35,15 @@ fun TaskListScreen(
     onOpenTodoDetails: (Long) -> Unit
 ) {
     val taskListViewModel: TaskListViewModel = hiltViewModel()
-    val state by taskListViewModel.state.collectAsStateWithLifecycle()
+    val lifecycleOwner = LocalLifecycleOwner.current
+    val viewModelState = remember(taskListViewModel.state, lifecycleOwner) {
+        taskListViewModel.state.flowWithLifecycle(lifecycleOwner.lifecycle, Lifecycle.State.STARTED)
+    }
+    val screenState by viewModelState.collectAsState(initial = TaskListUiState())
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
-    val showEmptyTasksMessage = remember(state.tasks) {
-        mutableStateOf(state.tasks.isEmpty())
+    val showEmptyTasksMessage = remember(screenState) {
+        mutableStateOf(screenState.tasks.isEmpty())
     }
 
     Scaffold(
@@ -56,10 +63,12 @@ fun TaskListScreen(
         }
     ) { contentPadding ->
         Column(
-            modifier = Modifier.fillMaxSize().padding(contentPadding)
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(contentPadding)
         ) {
             FilterTaskSection(
-                selectedPriority = state.selectedPriority,
+                selectedPriority = screenState.selectedPriority,
                 onFilterByPriority = { priority ->
                     taskListViewModel.onEvent(TaskListEvent.ChangePriorityFilter(priority = priority))
                 }
@@ -74,7 +83,7 @@ fun TaskListScreen(
                     )
                 } else {
                     TaskList(
-                        todoList = state.tasks,
+                        todoList = screenState.tasks,
                         onOpenTodoDetails = onOpenTodoDetails,
                         onToggleCompleteTask = { taskId ->
                             taskListViewModel.onEvent(TaskListEvent.ToggleCompleteTask(taskId))

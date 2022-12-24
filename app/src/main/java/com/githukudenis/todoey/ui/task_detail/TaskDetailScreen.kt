@@ -9,13 +9,15 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.flowWithLifecycle
 import com.githukudenis.todoey.R
 import com.githukudenis.todoey.data.local.Priority
 import com.githukudenis.todoey.data.local.TaskEntity
@@ -40,7 +42,11 @@ fun TaskDetailScreen(
     val context = LocalContext.current
     val snackbarHostState = remember { SnackbarHostState() }
     val taskDetailViewModel: TaskDetailViewModel = hiltViewModel()
-    val state = taskDetailViewModel.state.collectAsStateWithLifecycle().value
+    val lifecycleOwner = LocalLifecycleOwner.current
+    val screenLifecycleAwareState = remember(taskDetailViewModel.state, lifecycleOwner) {
+        taskDetailViewModel.state.flowWithLifecycle(lifecycleOwner.lifecycle, Lifecycle.State.STARTED)
+    }
+    val state by screenLifecycleAwareState.collectAsState(initial = TaskDetailUiState())
 
     Scaffold(
         snackbarHost = {
@@ -83,7 +89,9 @@ fun TaskDetailScreen(
             }
         }
         Column(
-            modifier = modifier.fillMaxSize().padding(contentPadding)
+            modifier = modifier
+                .fillMaxSize()
+                .padding(contentPadding)
         ) {
             state.taskDetail?.let { task ->
                 TaskDetailScreen(
@@ -154,7 +162,9 @@ private fun TaskDetailScreen(
     }
 
     Column(
-        modifier = modifier.fillMaxWidth().padding(12.dp),
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(12.dp),
         verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
         TaskInput(
