@@ -6,7 +6,7 @@ Assist tries to bring together all the common and typical daily use cases of a m
 ###### 1. Tasks
 Create tasks from a single point. Sort and order by date, time and priority.
 * Task list
-![task_list_google-pixel4-clearlywhite-portrait.png]
+![task_list_google-pixel4-clearlywhite-portrait](https://user-images.githubusercontent.com/47632042/209703821-0ec09b94-ecfe-4104-bc11-1587c7c3d6e2.png)
 * Task detail 
 ![task_detail_google-pixel4-clearlywhite-portrait](https://user-images.githubusercontent.com/47632042/209699080-b79a1897-8324-409c-bd6a-cbcf4d45ad52.png)
 * Create new task
