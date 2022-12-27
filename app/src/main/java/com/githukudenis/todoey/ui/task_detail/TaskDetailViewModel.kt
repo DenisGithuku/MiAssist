@@ -31,7 +31,7 @@ class TaskDetailViewModel @Inject constructor(
     fun onEvent(taskDetailEvent: TaskDetailEvent) {
         when (taskDetailEvent) {
             is TaskDetailEvent.UpdateTask -> {
-                saveTask(taskDetailEvent.taskEntity)
+                updateTask(taskDetailEvent.taskEntity)
             }
             is TaskDetailEvent.ShowUserMessage -> {
                 val userMessages = mutableListOf<UserMessage>()
@@ -48,6 +48,15 @@ class TaskDetailViewModel @Inject constructor(
                     )
                 }
             }
+            is TaskDetailEvent.MarkComplete -> {
+                val task = _state.value.taskDetail?.let { taskEntity ->
+                    taskEntity.copy(completed = !taskEntity.completed)
+                }
+                _state.update { prevState ->
+                    prevState.copy(taskDetail = task)
+                }
+                updateTask(taskEntity = task ?: return)
+            }
         }
     }
 
@@ -63,7 +72,7 @@ class TaskDetailViewModel @Inject constructor(
         }
     }
 
-    fun saveTask(taskEntity: TaskEntity) {
+    fun updateTask(taskEntity: TaskEntity) {
         viewModelScope.launch {
             tasksRepository.updateTask(taskEntity)
         }
