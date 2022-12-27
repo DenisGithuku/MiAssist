@@ -74,6 +74,18 @@ fun TaskDetailScreen(
                             contentDescription = context.getString(R.string.mark_complete)
                         )
                     }
+                    IconButton(
+                        onClick = {
+                            taskDetailViewModel.onEvent(TaskDetailEvent.DeleteTask).also {
+                                onNavigateUp()
+                            }
+                        }
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_trash),
+                            contentDescription = context.getString(R.string.delete_task)
+                        )
+                    }
                 },
                 scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(),
                 navigationIcon = {

@@ -5,6 +5,7 @@ import com.githukudenis.todoey.util.UserMessage
 
 sealed interface TaskDetailEvent {
     object MarkComplete : TaskDetailEvent
+    object DeleteTask : TaskDetailEvent
     data class UpdateTask(val taskEntity: TaskEntity) : TaskDetailEvent
     data class ShowUserMessage(val userMessage: UserMessage) : TaskDetailEvent
     data class DismissUserMessage(val userMessage: UserMessage) : TaskDetailEvent

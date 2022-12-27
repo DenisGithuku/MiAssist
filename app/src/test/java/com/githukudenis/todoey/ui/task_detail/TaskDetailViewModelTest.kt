@@ -48,4 +48,15 @@ class TaskDetailViewModelTest {
         val taskFromRepo = tasksRepository.getTaskById(task.taskId ?: return@runTest).first()
         assertEquals(task, taskFromRepo)
     }
+
+    @Test
+    fun deleteTask() = runTest {
+        val task = TaskEntity(taskId = 15, taskTitle = "")
+        tasksRepository.addTask(task)
+        val allTasks = tasksRepository.getAllTasks(sortType = SortType.DUE_DATE, orderType = OrderType.DESCENDING).first()
+        assert(allTasks.contains(task))
+
+        taskDetailViewModel.deleteTask(task)
+        assert(!allTasks.contains(task))
+    }
 }
