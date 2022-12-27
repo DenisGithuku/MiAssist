@@ -35,7 +35,7 @@ fun TodoeyNavigator(
             )
         }
         composable(route = TodoeyScreen.TaskDetail.routeId + "/{taskId}") {
-            TaskDetailScreen(onSaveTask = {
+            TaskDetailScreen(onUpdateTask = {
                 navController.popBackStack()
             }, onNavigateUp = { navController.navigateUp() })
         }

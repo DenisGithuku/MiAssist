@@ -36,7 +36,7 @@ import java.time.format.DateTimeFormatter
 @Composable
 fun TaskDetailScreen(
     modifier: Modifier = Modifier,
-    onSaveTask: () -> Unit,
+    onUpdateTask: () -> Unit,
     onNavigateUp: () -> Unit
 ) {
     val context = LocalContext.current
@@ -58,8 +58,22 @@ fun TaskDetailScreen(
             CenterAlignedTopAppBar(
                 title = {
                     Text(
-                        text = context.getString(R.string.add_todo_title)
+                        text = context.getString(R.string.todo_detail_title)
                     )
+                },
+                actions = {
+                    IconButton(
+                        onClick = {
+                            taskDetailViewModel.onEvent(TaskDetailEvent.MarkComplete).also {
+                                onUpdateTask()
+                            }
+                        }
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.check_done),
+                            contentDescription = context.getString(R.string.mark_complete)
+                        )
+                    }
                 },
                 scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(),
                 navigationIcon = {
@@ -99,7 +113,7 @@ fun TaskDetailScreen(
                     priorities = state.priorities,
                     onUpdateTask = { taskEntity ->
                         taskDetailViewModel.onEvent(TaskDetailEvent.UpdateTask(taskEntity))
-                        onSaveTask()
+                        onUpdateTask()
                     },
                     onShowUserMessage = { userMessage ->
                         taskDetailViewModel.onEvent(TaskDetailEvent.ShowUserMessage(userMessage = userMessage))

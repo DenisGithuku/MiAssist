@@ -9,4 +9,6 @@
     <string name="date_dialog_title">Pick a date</string>
     <string name="time_dialog_title">Pick a time</string>
     <string name="empty_fields">Fields cannot be empty</string>
+    <string name="mark_complete">Complete task</string>
+    <string name="todo_detail_title">Todo Detail</string>
 </resources>
