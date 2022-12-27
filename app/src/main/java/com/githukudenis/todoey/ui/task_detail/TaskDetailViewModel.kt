@@ -57,6 +57,9 @@ class TaskDetailViewModel @Inject constructor(
                 }
                 updateTask(taskEntity = task ?: return)
             }
+            is TaskDetailEvent.DeleteTask -> {
+                deleteTask(taskEntity = _state.value.taskDetail ?: return)
+            }
         }
     }
 
@@ -75,6 +78,12 @@ class TaskDetailViewModel @Inject constructor(
     fun updateTask(taskEntity: TaskEntity) {
         viewModelScope.launch {
             tasksRepository.updateTask(taskEntity)
+        }
+    }
+
+    fun deleteTask(taskEntity: TaskEntity) {
+        viewModelScope.launch {
+            tasksRepository.deleteTask(taskEntity)
         }
     }
 }
