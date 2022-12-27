@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -68,11 +69,15 @@ fun TaskCard(
         ) {
             Text(
                 text = taskEntity.taskTitle,
-                style = MaterialTheme.typography.bodyLarge
+                style = MaterialTheme.typography.bodyLarge.copy(
+                    textDecoration = if (taskEntity.completed) TextDecoration.LineThrough else TextDecoration.None
+                )
             )
             Text(
                 text = taskEntity.taskDescription ?: return,
-                style = MaterialTheme.typography.labelMedium,
+                style = MaterialTheme.typography.labelMedium.copy(
+                    textDecoration = if (taskEntity.completed) TextDecoration.LineThrough else TextDecoration.None
+                ),
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis
             )
@@ -91,7 +96,9 @@ fun TaskCard(
             ) {
                 Text(
                     text = "$dueDate, $dueTime",
-                    style = MaterialTheme.typography.labelMedium,
+                    style = MaterialTheme.typography.labelMedium.copy(
+                        textDecoration = if (taskEntity.completed) TextDecoration.LineThrough else TextDecoration.None
+                    ),
                     color = MaterialTheme.colorScheme.primary
                 )
             }
