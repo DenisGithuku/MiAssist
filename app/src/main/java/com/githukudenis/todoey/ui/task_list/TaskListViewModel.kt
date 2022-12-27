@@ -29,9 +29,19 @@ class TaskListViewModel @Inject constructor(
     fun onEvent(taskListEvent: TaskListEvent) {
         when (taskListEvent) {
             is TaskListEvent.ChangeOrderType -> {
+                _state.update { prevState ->
+                    prevState.copy(
+                        selectedOrderType = taskListEvent.orderType
+                    )
+                }
                 getAllTodos(orderType = taskListEvent.orderType)
             }
             is TaskListEvent.ChangeSortType -> {
+                _state.update { prevState ->
+                    prevState.copy(
+                        selectedSortType = taskListEvent.sortType
+                    )
+                }
                 getAllTodos(sortType = taskListEvent.sortType)
             }
 
