@@ -74,6 +74,12 @@ kapt {
 
 dependencies {
 
+    // project modules
+    implementation(project(":core_data"))
+    implementation(project(":core_design"))
+    implementation(project(":tasks"))
+    implementation(project(":statistics"))
+
     implementation("androidx.core:core-ktx:1.9.0")
 
     // lifecycle

@@ -15,3 +15,7 @@ dependencyResolutionManagement {
 }
 rootProject.name = "Todoey"
 include ':app'
+include ':statistics'
+include ':core_data'
+include ':tasks'
+include ':core_design'
