@@ -12,6 +12,9 @@
     <string name="mark_complete">Complete task</string>
     <string name="todo_detail_title">Todo Detail</string>
     <string name="delete_task">Delete</string>
+<<<<<<< HEAD
     <string name="expand">Expand\n</string>
     <string name="collpase">Collpase</string>
+=======
+>>>>>>> 340e10ca9a93f699d3daca42bb4352a45cb188ed
 </resources>
