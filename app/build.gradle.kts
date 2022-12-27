@@ -60,7 +60,7 @@ configure<org.jlleitschuh.gradle.ktlint.KtlintExtension> {
     outputColorName.set("RED")
     ignoreFailures.set(true)
     enableExperimentalRules.set(true)
-    disabledRules.set(setOf("final-newline", "no-wildcard-imports", "experimental:package-name"))
+    disabledRules.set(setOf("final-newline", "no-wildcard-imports", "experimental:package-name", "annotation", "chain-wrapping"))
     reporters {
         reporter(org.jlleitschuh.gradle.ktlint.reporter.ReporterType.SARIF)
         reporter(org.jlleitschuh.gradle.ktlint.reporter.ReporterType.PLAIN)

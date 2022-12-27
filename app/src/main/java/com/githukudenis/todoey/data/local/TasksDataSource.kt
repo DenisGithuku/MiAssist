@@ -28,11 +28,6 @@ class TasksDataSource @Inject constructor(
             when (orderType) {
                 OrderType.ASCENDING -> {
                     when (sortType) {
-                        SortType.PRIORITY -> {
-                            val sortedTodos = todos.sortedBy { todo -> todo.priority }
-                            emit(sortedTodos)
-                        }
-
                         SortType.DUE_DATE -> {
                             val sortedTodos = todos.sortedBy { todo -> todo.taskDueDate }
                             emit(sortedTodos)
@@ -47,11 +42,6 @@ class TasksDataSource @Inject constructor(
 
                 OrderType.DESCENDING -> {
                     when (sortType) {
-                        SortType.PRIORITY -> {
-                            val sortedTodos = todos.sortedByDescending { todo -> todo.priority }
-                            emit(sortedTodos)
-                        }
-
                         SortType.DUE_DATE -> {
                             val sortedTodos = todos.sortedByDescending { todo -> todo.taskDueDate }
                             emit(sortedTodos)
