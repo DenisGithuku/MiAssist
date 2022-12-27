@@ -6,6 +6,7 @@ import com.githukudenis.todoey.data.local.TaskEntity
 import com.githukudenis.todoey.util.MainCoroutineRule
 import com.githukudenis.todoey.util.OrderType
 import com.githukudenis.todoey.util.SortType
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.*
@@ -13,6 +14,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class TaskDetailViewModelTest {
 
     @get:Rule
