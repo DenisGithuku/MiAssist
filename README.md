@@ -1,6 +1,6 @@
 ### Personal mobile assistant client running on Android
-##### About Assist
-Assist tries to bring together all the common and typical daily use cases of a mobile phone. This ranges from creating tasks, visualising app usage by providing metrics and curating stats for different app permissions. Assist is still in development supporting tasks as a feature at the point of this writing. More features are coming soon since the app is heavily in development. Contribution to the code base is very welcome.
+##### About MiAssist
+MiAssist tries to bring together all the common and typical daily use cases of a mobile phone. This ranges from creating tasks, visualising app usage by providing metrics and curating stats for different app permissions. Assist is still in development supporting tasks as a feature at the point of this writing. More features are coming soon since the app is heavily in development. Contribution to the code base is very welcome.
 
 ##### Features
 ###### 1. Tasks
