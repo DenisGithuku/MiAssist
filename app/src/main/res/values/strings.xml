@@ -1,17 +1,3 @@
 <resources>
     <string name="app_name">Todoey</string>
-    <string name="add_todo_title">Add task</string>
-    <string name="navigate_up_text">Navigate up</string>
-    <string name="todo_title_hint">Title</string>
-    <string name="todo_description_hint">Description</string>
-    <string name="no_tasks_status">You\'re all caught up. Click on the + button to add new tasks</string>
-    <string name="priority_title">Priority</string>
-    <string name="date_dialog_title">Pick a date</string>
-    <string name="time_dialog_title">Pick a time</string>
-    <string name="empty_fields">Fields cannot be empty</string>
-    <string name="mark_complete">Complete task</string>
-    <string name="todo_detail_title">Todo Detail</string>
-    <string name="delete_task">Delete</string>
-    <string name="expand">Expand\n</string>
-    <string name="collpase">Collpase</string>
 </resources>
