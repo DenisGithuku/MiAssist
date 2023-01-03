@@ -4,17 +4,17 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.githukudenis.todoey.ui.TodoeyScreen
-import com.githukudenis.todoey.ui.add_task.AddTaskScreen
-import com.githukudenis.todoey.ui.task_detail.TaskDetailScreen
-import com.githukudenis.todoey.ui.task_list.TaskListScreen
+import com.githukudenis.tasks.TodoeyScreen
+import com.githukudenis.tasks.ui.add_task.AddTaskScreen
+import com.githukudenis.tasks.ui.task_detail.TaskDetailScreen
+import com.githukudenis.tasks.ui.task_list.TaskListScreen
 
 @Composable
 fun TodoeyNavigator(
     navController: NavHostController
 ) {
-    NavHost(navController = navController, startDestination = TodoeyScreen.TaskList.routeId) {
-        composable(route = TodoeyScreen.TaskList.routeId) {
+    NavHost(navController = navController, startDestination = com.githukudenis.tasks.TodoeyScreen.TaskList.routeId) {
+        composable(route = com.githukudenis.tasks.TodoeyScreen.TaskList.routeId) {
             TaskListScreen(
                 onNewTask = {
                     navController.navigate(route = TodoeyScreen.AddTask.routeId) {
