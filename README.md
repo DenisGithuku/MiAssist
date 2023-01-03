@@ -6,11 +6,14 @@ MiAssist tries to bring together all the common and typical daily use cases of a
 ###### 1. Tasks
 Create tasks from a single point. Sort and order by date, time and priority.
 * Task list
-![task_list_google-pixel4-clearlywhite-portrait](https://user-images.githubusercontent.com/47632042/209703821-0ec09b94-ecfe-4104-bc11-1587c7c3d6e2.png)
+<img src = "https://user-images.githubusercontent.com/47632042/209703821-0ec09b94-ecfe-4104-bc11-1587c7c3d6e2.png" width = "30%" height = "30%">
+
 * Task detail 
-![task_detail_google-pixel4-clearlywhite-portrait](https://user-images.githubusercontent.com/47632042/209699080-b79a1897-8324-409c-bd6a-cbcf4d45ad52.png)
+<img src = "https://user-images.githubusercontent.com/47632042/209699080-b79a1897-8324-409c-bd6a-cbcf4d45ad52.png" width = "30%" height = "30%">
+
 * Create new task
-![add_task_google-pixel4-clearlywhite-portrait](https://user-images.githubusercontent.com/47632042/209699170-169b7fa4-8b03-483c-8b7e-9dae0a487eae.png)
+<img src = "https://user-images.githubusercontent.com/47632042/209699170-169b7fa4-8b03-483c-8b7e-9dae0a487eae.png" width = "30%" height = "30%">
+
 more coming soon ...
 ###### 2. Installing and running app
 The app relies on the following:-
