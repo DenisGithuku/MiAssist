@@ -20,7 +20,7 @@ The app relies on the following:-
 * compileSdk and targetSdk version :  `33`
 * minimumSdk version : `26`. 
 * Android gradle plugin version : `7.3.0`. 
-* Jetpack compose : = `1.3.2`.
+* Jetpack compose : `1.2.0`.
 * Kotlin : `1.7.0`.
 * Android studio: Dolphin
 1. To start with checkout the main branch then run `git clone https://github.com/DenisGithuku/Todoey` to fork the repository into your local machine. 
