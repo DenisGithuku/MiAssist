@@ -30,5 +30,4 @@ object TasksModule {
     ): AppStatsRepository {
         return AppStatsRepositoryImpl(appUsageProvider)
     }
-
 }

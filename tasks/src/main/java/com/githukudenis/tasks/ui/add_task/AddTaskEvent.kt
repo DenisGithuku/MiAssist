@@ -2,7 +2,7 @@ package com.githukudenis.tasks.ui.add_task
 
 import com.denisgithuku.tasks.data.local.Priority
 import com.denisgithuku.tasks.data.local.TaskEntity
-import com.githukudenis.tasks.util.UserMessage
+import com.githukudenis.core_data.util.UserMessage
 
 sealed interface AddTaskEvent {
     data class ChangeTaskPriority(val priority: Priority) : AddTaskEvent

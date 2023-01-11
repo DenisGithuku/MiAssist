@@ -4,8 +4,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.denisgithuku.tasks.data.local.TaskEntity
+import com.githukudenis.core_data.util.UserMessage
 import com.githukudenis.tasks.domain.TasksRepository
-import com.githukudenis.tasks.util.UserMessage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

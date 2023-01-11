@@ -8,7 +8,7 @@ import com.githukudenis.statistics.domain.repository.AppStatsRepository
 
 class AppStatsRepositoryImpl(
     private val appUsageProvider: AppUsageProvider
-): AppStatsRepository {
+) : AppStatsRepository {
     @RequiresApi(Build.VERSION_CODES.O)
     override suspend fun getUsageStats(): List<UsageStats> {
         return appUsageProvider.getUsageStats()

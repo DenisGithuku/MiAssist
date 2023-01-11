@@ -21,10 +21,10 @@ import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.denisgithuku.tasks.data.local.Priority
 import com.denisgithuku.tasks.data.local.TaskEntity
+import com.githukudenis.core_data.util.UserMessage
 import com.githukudenis.tasks.R
 import com.githukudenis.tasks.ui.add_task.components.PriorityChip
 import com.githukudenis.tasks.ui.add_task.components.TaskInput
-import com.githukudenis.tasks.util.UserMessage
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.datetime.date.datepicker
 import com.vanpra.composematerialdialogs.datetime.time.timepicker
