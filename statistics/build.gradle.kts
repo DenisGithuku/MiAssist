@@ -57,8 +57,8 @@ configure<org.jlleitschuh.gradle.ktlint.KtlintExtension> {
 dependencies {
 
     implementation("androidx.core:core-ktx:1.9.0")
-    implementation(project(":core_data"))
     implementation(project(":core_design"))
+    implementation(project(":core_data"))
 
     // lifecycle
     implementation("androidx.lifecycle:lifecycle-common:2.5.1")

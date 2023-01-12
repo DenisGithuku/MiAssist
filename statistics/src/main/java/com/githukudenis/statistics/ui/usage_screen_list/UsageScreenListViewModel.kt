@@ -5,6 +5,11 @@ import androidx.lifecycle.viewModelScope
 import com.githukudenis.statistics.domain.repository.AppStatsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -14,6 +19,7 @@ class UsageScreenListViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(UsageStatsScreenUiState())
+    val uiState: StateFlow<UsageStatsScreenUiState> get() = _uiState.asStateFlow()
 
     init {
         getUsageStats()
@@ -21,7 +27,15 @@ class UsageScreenListViewModel @Inject constructor(
 
     private fun getUsageStats() {
         viewModelScope.launch {
+            _uiState.update {
+                it.copy(isLoading = true)
+            }
             val usageStats = appUsageStatsRepository.getUsageStats()
+            _uiState.update {
+                it.copy(
+                    data = usageStats
+                )
+            }
         }
     }
 }

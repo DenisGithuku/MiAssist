@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.githukudenis.statistics.ui.usage_screen_list.UsageListScreen
 import com.githukudenis.tasks.TodoeyScreen
 import com.githukudenis.tasks.ui.add_task.AddTaskScreen
 import com.githukudenis.tasks.ui.task_detail.TaskDetailScreen
@@ -13,7 +14,7 @@ import com.githukudenis.tasks.ui.task_list.TaskListScreen
 fun TodoeyNavigator(
     navController: NavHostController
 ) {
-    NavHost(navController = navController, startDestination = com.githukudenis.tasks.TodoeyScreen.TaskList.routeId) {
+    NavHost(navController = navController, startDestination = TodoeyScreen.TaskList.routeId) {
         composable(route = com.githukudenis.tasks.TodoeyScreen.TaskList.routeId) {
             TaskListScreen(
                 onNewTask = {
@@ -46,6 +47,12 @@ fun TodoeyNavigator(
                 },
                 onNavigateUp = { navController.navigateUp() }
             )
+        }
+
+        composable(
+            route = "statistics")
+        {
+            UsageListScreen()
         }
     }
 }
