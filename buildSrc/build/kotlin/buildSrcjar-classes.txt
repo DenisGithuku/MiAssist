@@ -1,0 +1,1 @@
+/home/denisgithuku/PersonalEffectives/Code/Android/Todoey/buildSrc/build/classes/kotlin/main/Dependencies.class:/home/denisgithuku/PersonalEffectives/Code/Android/Todoey/buildSrc/build/classes/kotlin/main/Versions.class
