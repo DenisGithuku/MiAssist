@@ -1,5 +1,5 @@
 plugins {
-    id("com.android.application")
+    id("com.android.library")
     id("org.jetbrains.kotlin.android")
     id("kotlin-kapt")
     id("kotlin-parcelize")
@@ -8,48 +8,42 @@ plugins {
 }
 
 android {
-    namespace = "com.githukudenis.miassist"
+    namespace = "com.githukudenis.tasks"
     compileSdk = 33
 
     defaultConfig {
-        applicationId = "com.githukudenis.miassist"
         minSdk = 24
         targetSdk = 33
-        versionCode = 1
-        versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        vectorDrawables {
-            useSupportLibrary = true
-        }
+        consumerProguardFiles("consumer-rules.pro")
     }
 
     tasks.getByName("preBuild").dependsOn("ktlintFormat")
 
-    buildTypes {
-        getByName("release") {
-            isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-        }
+    buildFeatures {
+        compose = true
     }
 
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.2.0"
+    }
+
+    buildTypes {
+        release {
+            isMinifyEnabled = false
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+        }
+    }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
     kotlinOptions {
         jvmTarget = "1.8"
-    }
-    buildFeatures {
-        compose = true
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.2.0"
-    }
-    packagingOptions {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-        }
     }
 }
 
@@ -68,17 +62,11 @@ configure<org.jlleitschuh.gradle.ktlint.KtlintExtension> {
     }
 }
 
-kapt {
-    correctErrorTypes = true
-}
-
 dependencies {
 
     implementation(Dependencies.androidx_core)
-
-    // project modules
     implementation(project(":core_design"))
-    implementation(project(":core_navigation"))
+    implementation(project(":core_data"))
 
     // lifecycle
     implementation(Dependencies.lifecycle_viewmodel)
