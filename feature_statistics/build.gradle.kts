@@ -37,6 +37,14 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+
+    buildFeatures {
+        compose = true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.2.0"
+    }
 }
 
 configure<org.jlleitschuh.gradle.ktlint.KtlintExtension> {
@@ -101,7 +109,6 @@ dependencies {
     implementation(Dependencies.room_ktx)
     implementation(Dependencies.room_paging)
     kapt(Dependencies.room_compiler)
-
 
     implementation(Dependencies.activity_compose)
     implementation(Dependencies.compose_ui)

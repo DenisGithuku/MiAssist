@@ -16,6 +16,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
@@ -43,6 +44,7 @@ import com.githukudenis.tasks.util.SortType
 )
 @Composable
 fun TaskListScreen(
+    snackbarHostState: SnackbarHostState,
     onNewTask: () -> Unit,
     onOpenTodoDetails: (Long) -> Unit
 ) {
@@ -52,27 +54,16 @@ fun TaskListScreen(
         taskListViewModel.state.flowWithLifecycle(lifecycleOwner.lifecycle, Lifecycle.State.STARTED)
     }
     val screenState by viewModelState.collectAsState(initial = TaskListUiState())
-    val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
     val showEmptyTasksMessage = remember(screenState) {
         mutableStateOf(screenState.tasks.isEmpty())
     }
 
-    Scaffold(snackbarHost = {
-        SnackbarHost(hostState = snackbarHostState)
-    }, floatingActionButton = {
-        FloatingActionButton(onClick = { onNewTask() }) {
-            Icon(
-                painter = painterResource(R.drawable.baseline_add_24),
-                contentDescription = "Add Task",
-                tint = MaterialTheme.colorScheme.onSecondaryContainer
-            )
-        }
-    }) { contentPadding ->
+    Box(modifier = Modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(contentPadding)
+                .padding(12.dp)
         ) {
             SortOrderTaskSection(
                 selectedSortType = screenState.selectedSortType,
@@ -108,6 +99,18 @@ fun TaskListScreen(
                     )
                 }
             }
+        }
+        FloatingActionButton(
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(16.dp),
+            onClick = { onNewTask() }
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.baseline_add_24),
+                contentDescription = "Add Task",
+                tint = MaterialTheme.colorScheme.onSecondaryContainer
+            )
         }
     }
 }

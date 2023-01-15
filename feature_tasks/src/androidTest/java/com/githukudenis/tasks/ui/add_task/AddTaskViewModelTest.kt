@@ -1,11 +1,11 @@
 package com.githukudenis.miassist.ui.add_task
 
-import com.githukudenis.tasks.ui.add_task.AddTaskViewModel
 import com.githukudenis.miassist.data.FakeTasksRepository
 import com.githukudenis.miassist.data.local.TaskEntity
 import com.githukudenis.miassist.util.MainCoroutineRule
 import com.githukudenis.miassist.util.OrderType
 import com.githukudenis.miassist.util.SortType
+import com.githukudenis.tasks.ui.add_task.AddTaskViewModel
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first

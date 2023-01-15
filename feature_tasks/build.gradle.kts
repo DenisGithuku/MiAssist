@@ -110,7 +110,6 @@ dependencies {
     implementation(Dependencies.room_paging)
     kapt(Dependencies.room_compiler)
 
-
     implementation(Dependencies.activity_compose)
     implementation(Dependencies.compose_ui)
     implementation(Dependencies.compose_tooling_preview)

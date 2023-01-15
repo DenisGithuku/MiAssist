@@ -39,44 +39,37 @@ import java.time.format.DateTimeFormatter
 @Composable
 fun AddTaskScreen(
     modifier: Modifier = Modifier,
+    snackbarHostState: SnackbarHostState,
     onSaveTask: () -> Unit,
     onNavigateUp: () -> Unit
+
 ) {
     val context = LocalContext.current
-    val snackbarHostState = remember { SnackbarHostState() }
     val addTaskViewModel: AddTaskViewModel = hiltViewModel()
     val state = addTaskViewModel.state.collectAsStateWithLifecycle().value
-
-    Scaffold(
-        snackbarHost = {
-            SnackbarHost(
-                hostState = snackbarHostState
-            )
-        },
-        topBar = {
-            CenterAlignedTopAppBar(
-                title = {
-                    Text(
-                        text = context.getString(R.string.add_todo_title)
-                    )
-                },
-                scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(),
-                navigationIcon = {
-                    IconButton(
-                        onClick = {
-                            onNavigateUp()
-                        }
-                    ) {
-                        Icon(
-                            painter = painterResource(R.drawable.back_android),
-                            contentDescription = context.getString(R.string.navigate_up_text)
-                        )
+    Column(
+        modifier = modifier.fillMaxSize().padding(12.dp)
+    ) {
+        CenterAlignedTopAppBar(
+            title = {
+                Text(
+                    text = context.getString(R.string.add_todo_title)
+                )
+            },
+            scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(),
+            navigationIcon = {
+                IconButton(
+                    onClick = {
+                        onNavigateUp()
                     }
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.back_android),
+                        contentDescription = context.getString(R.string.navigate_up_text)
+                    )
                 }
-            )
-        },
-        contentWindowInsets = WindowInsets.safeContent
-    ) { contentPadding ->
+            }
+        )
 
         if (state.userMessages.isNotEmpty()) {
             LaunchedEffect(key1 = state.userMessages, key2 = snackbarHostState) {
@@ -87,24 +80,20 @@ fun AddTaskScreen(
                 addTaskViewModel.onEvent(AddTaskEvent.DismissUserMessage(userMessage))
             }
         }
-        Column(
-            modifier = modifier.fillMaxSize().padding(contentPadding)
-        ) {
-            AddTaskScreen(
-                priority = state.priority,
-                onChangePriority = { newPriority: Priority ->
-                    addTaskViewModel.onEvent(AddTaskEvent.ChangeTaskPriority(priority = newPriority))
-                },
-                priorities = state.priorities,
-                onSaveTask = { todoEntity ->
-                    addTaskViewModel.onEvent(AddTaskEvent.SaveTask(todoEntity))
-                    onSaveTask()
-                },
-                onShowUserMessage = { userMessage ->
-                    addTaskViewModel.onEvent(AddTaskEvent.ShowUserMessage(userMessage = userMessage))
-                }
-            )
-        }
+        AddTaskScreen(
+            priority = state.priority,
+            onChangePriority = { newPriority: Priority ->
+                addTaskViewModel.onEvent(AddTaskEvent.ChangeTaskPriority(priority = newPriority))
+            },
+            priorities = state.priorities,
+            onSaveTask = { todoEntity ->
+                addTaskViewModel.onEvent(AddTaskEvent.SaveTask(todoEntity))
+                onSaveTask()
+            },
+            onShowUserMessage = { userMessage ->
+                addTaskViewModel.onEvent(AddTaskEvent.ShowUserMessage(userMessage = userMessage))
+            }
+        )
     }
 }
 

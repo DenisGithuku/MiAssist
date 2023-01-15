@@ -1,9 +1,9 @@
 package com.githukudenis.miassist.data
 
-import com.githukudenis.tasks.domain.TasksRepository
 import com.githukudenis.miassist.data.local.TaskEntity
 import com.githukudenis.miassist.util.OrderType
 import com.githukudenis.miassist.util.SortType
+import com.githukudenis.tasks.domain.TasksRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flowOf

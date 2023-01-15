@@ -23,7 +23,7 @@ import androidx.lifecycle.flowWithLifecycle
 fun UsageListScreen() {
     val usageScreenListViewModel: UsageScreenListViewModel = hiltViewModel()
     val lifecycleOwner = LocalLifecycleOwner.current
-    val viewModelState = remember (usageScreenListViewModel.uiState, lifecycleOwner) {
+    val viewModelState = remember(usageScreenListViewModel.uiState, lifecycleOwner) {
         usageScreenListViewModel.uiState.flowWithLifecycle(
             lifecycle = lifecycleOwner.lifecycle,
             Lifecycle.State.STARTED
@@ -46,13 +46,12 @@ private fun UsageListScreen(
         items(usageStats) { usageStat ->
             Column(modifier = modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(4.dp)) {
                 Text(
-                    text = usageStat.packageName,
+                    text = usageStat.packageName
                 )
                 Text(
-                    text = "${usageStat.lastTimeUsed}",
+                    text = "${usageStat.lastTimeUsed}"
                 )
             }
         }
     }
-
 }

@@ -1,7 +1,6 @@
-package com.githukudenis.statistics.ui
+package com.githukudenis.core_navigation
 
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.runtime.Composable
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
@@ -15,13 +14,18 @@ fun NavGraphBuilder.featureStatsNavGraph(
     navHostController: NavHostController
 ) {
     navigation(
-        startDestination = StatisticScreenDestination.UsageListScreenDestination.routeId,
+        startDestination = MiAssistScreenDestination.UsageListScreenDestination.routeId,
         route = FeatureStatisticsGraphRouteId
     ) {
         composable(
-            route = StatisticScreenDestination.UsageListScreenDestination.routeId
+            route = MiAssistScreenDestination.UsageListScreenDestination.routeId
         ) {
             UsageListScreen()
+        }
+
+        composable(
+            route = MiAssistScreenDestination.AppUsageDetailScreenDestination.routeId
+        ) {
         }
     }
 }

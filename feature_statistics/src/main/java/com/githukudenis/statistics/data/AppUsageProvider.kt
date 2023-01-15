@@ -17,7 +17,7 @@ class AppUsageProvider(
     @RequiresApi(Build.VERSION_CODES.O)
     suspend fun getUsageStats(): List<UsageStats> {
         if (!context.hasUsagePermissions()) {
-            throw Exception(message = "This app needs permissions to access app usage.")
+            throw Throwable(message = "This app needs permissions to access app usage.")
         }
 
         val usageStatsManager =

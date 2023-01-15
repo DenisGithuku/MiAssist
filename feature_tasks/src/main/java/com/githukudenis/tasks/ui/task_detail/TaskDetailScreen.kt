@@ -39,11 +39,11 @@ import java.time.format.DateTimeFormatter
 @Composable
 fun TaskDetailScreen(
     modifier: Modifier = Modifier,
+    snackbarHostState: SnackbarHostState,
     onUpdateTask: () -> Unit,
     onNavigateUp: () -> Unit
 ) {
     val context = LocalContext.current
-    val snackbarHostState = remember { SnackbarHostState() }
     val taskDetailViewModel: TaskDetailViewModel = hiltViewModel()
     val lifecycleOwner = LocalLifecycleOwner.current
     val screenLifecycleAwareState = remember(taskDetailViewModel.state, lifecycleOwner) {
@@ -53,64 +53,46 @@ fun TaskDetailScreen(
         )
     }
     val state by screenLifecycleAwareState.collectAsState(initial = TaskDetailUiState())
-
-    Scaffold(
-        snackbarHost = {
-            SnackbarHost(
-                hostState = snackbarHostState
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(12.dp)
+    ) {
+        CenterAlignedTopAppBar(title = {
+            Text(
+                text = context.getString(R.string.todo_detail_title)
             )
-        },
-        topBar = {
-            CenterAlignedTopAppBar(
-                title = {
-                    Text(
-                        text = context.getString(R.string.todo_detail_title)
-                    )
-                },
-                actions = {
-                    IconButton(
-                        onClick = {
-                            taskDetailViewModel.onEvent(TaskDetailEvent.MarkComplete).also {
-                                onUpdateTask()
-                            }
-                        }
-                    ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.check_done),
-                            contentDescription = context.getString(R.string.mark_complete)
-                        )
-                    }
-                    IconButton(
-                        onClick = {
-                            taskDetailViewModel.onEvent(TaskDetailEvent.DeleteTask).also {
-                                onNavigateUp()
-                            }
-                        }
-                    ) {
-                        Icon(
-                            painter = painterResource(R.drawable.ic_trash),
-                            contentDescription = context.getString(R.string.delete_task)
-                        )
-                    }
-                },
-                scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(),
-                navigationIcon = {
-                    IconButton(
-                        onClick = {
-                            onNavigateUp()
-                        }
-                    ) {
-                        Icon(
-                            painter = painterResource(R.drawable.back_android),
-                            contentDescription = context.getString(R.string.navigate_up_text)
-                        )
-                    }
+        }, actions = {
+            IconButton(onClick = {
+                taskDetailViewModel.onEvent(TaskDetailEvent.MarkComplete).also {
+                    onUpdateTask()
                 }
-            )
-        },
-        contentWindowInsets = WindowInsets.safeContent
-    ) { contentPadding ->
-
+            }) {
+                Icon(
+                    painter = painterResource(id = R.drawable.check_done),
+                    contentDescription = context.getString(R.string.mark_complete)
+                )
+            }
+            IconButton(onClick = {
+                taskDetailViewModel.onEvent(TaskDetailEvent.DeleteTask).also {
+                    onNavigateUp()
+                }
+            }) {
+                Icon(
+                    painter = painterResource(R.drawable.ic_trash),
+                    contentDescription = context.getString(R.string.delete_task)
+                )
+            }
+        }, scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(), navigationIcon = {
+            IconButton(onClick = {
+                onNavigateUp()
+            }) {
+                Icon(
+                    painter = painterResource(R.drawable.back_android),
+                    contentDescription = context.getString(R.string.navigate_up_text)
+                )
+            }
+        })
         if (state.userMessages.isNotEmpty()) {
             LaunchedEffect(key1 = state.userMessages, key2 = snackbarHostState) {
                 val userMessage = state.userMessages[0]
@@ -120,24 +102,19 @@ fun TaskDetailScreen(
                 taskDetailViewModel.onEvent(TaskDetailEvent.DismissUserMessage(userMessage))
             }
         }
-        Column(
-            modifier = modifier
-                .fillMaxSize()
-                .padding(contentPadding)
-        ) {
-            state.taskDetail?.let { task ->
-                TaskDetailScreen(
-                    taskDetail = task,
-                    priorities = state.priorities,
-                    onUpdateTask = { taskEntity ->
-                        taskDetailViewModel.onEvent(TaskDetailEvent.UpdateTask(taskEntity))
-                        onUpdateTask()
-                    },
-                    onShowUserMessage = { userMessage ->
-                        taskDetailViewModel.onEvent(TaskDetailEvent.ShowUserMessage(userMessage = userMessage))
-                    }
-                )
-            }
+
+        state.taskDetail?.let { task ->
+            TaskDetailScreen(
+                taskDetail = task,
+                priorities = state.priorities,
+                onUpdateTask = { taskEntity ->
+                    taskDetailViewModel.onEvent(TaskDetailEvent.UpdateTask(taskEntity))
+                    onUpdateTask()
+                },
+                onShowUserMessage = { userMessage ->
+                    taskDetailViewModel.onEvent(TaskDetailEvent.ShowUserMessage(userMessage = userMessage))
+                }
+            )
         }
     }
 }
