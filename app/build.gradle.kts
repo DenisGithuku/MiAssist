@@ -8,12 +8,12 @@ plugins {
 }
 
 android {
-    namespace = "com.githukudenis.todoey"
+    namespace = "com.githukudenis.miassist"
     compileSdk = 33
 
     defaultConfig {
-        applicationId = "com.githukudenis.todoey"
-        minSdk = 26
+        applicationId = "com.githukudenis.miassist"
+        minSdk = 24
         targetSdk = 33
         versionCode = 1
         versionName = "1.0"
@@ -74,88 +74,83 @@ kapt {
 
 dependencies {
 
-    // project modules
-    implementation(project(":core_data"))
-    implementation(project(":core_design"))
-    implementation(project(":tasks"))
-    implementation(project(":statistics"))
+    implementation(Dependencies.androidx_core)
 
-    implementation("androidx.core:core-ktx:1.9.0")
+    // project modules
+    implementation(project(":core_design"))
+    implementation(project(":core_navigation"))
 
     // lifecycle
-    implementation("androidx.lifecycle:lifecycle-common:2.5.1")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-savedstate:2.5.1")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.5.1")
-    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.0-alpha03")
+    implementation(Dependencies.lifecycle_viewmodel)
+    implementation(Dependencies.lifecycle_common)
+    implementation(Dependencies.lifecycle_viewmodel_savedstate)
+    implementation(Dependencies.lifecycle_runtime)
+    implementation(Dependencies.lifecycle_runtime_compose)
 
     // coroutines
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
+    implementation(Dependencies.coroutines_core)
+    implementation(Dependencies.coroutines_android)
 
     // navigation
-    implementation("androidx.navigation:navigation-compose:2.5.3")
-    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
+    implementation(Dependencies.compose_navigation)
+    implementation(Dependencies.hilt_navigation_compose)
 
     // hilt
-    implementation("androidx.hilt:hilt-work:1.0.0")
-    testImplementation("junit:junit:4.13.2")
-    kapt("androidx.hilt:hilt-compiler:1.0.0")
-    implementation("com.google.dagger:hilt-android:2.44.2")
-    kapt("com.google.dagger:hilt-android-compiler:2.44.2")
+    implementation(Dependencies.hilt_work)
+    testImplementation(Dependencies.junit)
+    kapt(Dependencies.hilt_compiler)
+    implementation(Dependencies.hilt_android)
+    kapt(Dependencies.hilt_android_compiler)
 
     // datastore prefs
-    implementation("androidx.datastore:datastore-preferences-core:1.0.0")
+    implementation(Dependencies.datastore)
 
-    implementation("androidx.savedstate:savedstate-ktx:1.2.0")
+    implementation(Dependencies.savedstate)
 
     // api sdk version less than 24
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.0")
+    coreLibraryDesugaring(Dependencies.coreLibraryDesugar)
 
     // date time picker
-    implementation("io.github.vanpra.compose-material-dialogs:datetime:0.8.1-rc")
+    implementation(Dependencies.datepicker)
 
     // accompanist
-    implementation("com.google.accompanist:accompanist-systemuicontroller:0.28.0")
+    implementation(Dependencies.systemui_controller)
 
     // room
-    implementation("androidx.room:room-runtime:2.4.3")
-    implementation("androidx.room:room-ktx:2.4.3")
-    implementation("androidx.room:room-paging:2.4.3")
-    kapt("androidx.room:room-compiler:2.4.3")
+    implementation(Dependencies.room_runtime)
+    implementation(Dependencies.room_ktx)
+    implementation(Dependencies.room_paging)
+    kapt(Dependencies.room_compiler)
 
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1")
-
-    implementation("androidx.activity:activity-compose:1.6.1")
-    implementation("androidx.compose.ui:ui:1.3.2")
-    implementation("androidx.compose.ui:ui-tooling-preview:1.3.2")
-    implementation("androidx.compose.animation:animation:1.3.2")
-    implementation("androidx.compose.ui:ui-tooling:1.3.2")
-    implementation("androidx.compose.material3:material3:1.1.0-alpha03")
+    implementation(Dependencies.activity_compose)
+    implementation(Dependencies.compose_ui)
+    implementation(Dependencies.compose_tooling_preview)
+    implementation(Dependencies.compose_animation)
+    implementation(Dependencies.compose_ui_tooling)
+    implementation(Dependencies.compose_material)
 
     // Local Unit Tests
-    implementation("androidx.test:core:1.5.0")
-    testImplementation("junit:junit:4.13.2")
-    testImplementation("org.hamcrest:hamcrest-all:1.3")
-    testImplementation("androidx.arch.core:core-testing:2.1.0")
-    testImplementation("org.robolectric:robolectric:4.9")
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
-    testImplementation("com.google.truth:truth:1.1.3")
-    testImplementation("org.mockito:mockito-core:4.8.0")
-    testImplementation("app.cash.turbine:turbine:0.12.1")
+    implementation(Dependencies.core_test)
+    testImplementation(Dependencies.junit_test)
+    testImplementation(Dependencies.hamcrest_test)
+    testImplementation(Dependencies.core_testing)
+    testImplementation(Dependencies.roboelectric_test)
+    testImplementation(Dependencies.coroutines_test)
+    testImplementation(Dependencies.truth_test)
+    testImplementation(Dependencies.mockito_core)
+    testImplementation(Dependencies.turbin_test)
 
     // Instrumented Unit Tests
-    androidTestImplementation("junit:junit:4.13.2")
-    androidTestImplementation("com.linkedin.dexmaker:dexmaker-mockito:2.28.3")
-    androidTestImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
-    androidTestImplementation("androidx.arch.core:core-testing:2.1.0")
-    androidTestImplementation("com.google.truth:truth:1.1.3")
-    androidTestImplementation("androidx.test.ext:junit:1.1.4")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.0")
-    androidTestImplementation("org.mockito:mockito-core:4.8.0")
-    androidTestImplementation("androidx.test.ext:junit:1.1.4")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.0")
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.3.2")
-    debugImplementation("androidx.compose.ui:ui-tooling:1.3.2")
-    debugImplementation("androidx.compose.ui:ui-test-manifest:1.3.2")
+    androidTestImplementation(Dependencies.junit_android_test)
+    androidTestImplementation(Dependencies.mockito_dex_android_test)
+    androidTestImplementation(Dependencies.android_coroutines_test)
+    androidTestImplementation(Dependencies.core_testing_android_test)
+    androidTestImplementation(Dependencies.truth_android_test)
+    androidTestImplementation(Dependencies.ext_junit_android_test)
+    androidTestImplementation(Dependencies.espresso_android_test)
+    androidTestImplementation(Dependencies.mockito_core)
+    androidTestImplementation(Dependencies.junit_compose_ui_test)
+    androidTestImplementation(Dependencies.espresso_core_android_test)
+    debugImplementation(Dependencies.compose_ui_debug_android_test)
+    debugImplementation(Dependencies.compose_test_manifest_android_test)
 }

@@ -8,7 +8,7 @@ plugins {
 }
 
 android {
-    namespace = "com.githukudenis.core_data"
+    namespace = "com.githukudenis.statistics"
     compileSdk = 33
 
     defaultConfig {
@@ -18,6 +18,7 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
     }
+
     tasks.getByName("preBuild").dependsOn("ktlintFormat")
 
     buildTypes {
@@ -64,6 +65,8 @@ configure<org.jlleitschuh.gradle.ktlint.KtlintExtension> {
 dependencies {
 
     implementation(Dependencies.androidx_core)
+    implementation(project(":core_design"))
+    implementation(project(":core_data"))
 
     // lifecycle
     implementation(Dependencies.lifecycle_viewmodel)
