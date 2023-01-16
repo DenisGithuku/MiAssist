@@ -62,7 +62,6 @@ fun TaskListScreen(
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
-                .fillMaxSize()
                 .padding(12.dp)
         ) {
             SortOrderTaskSection(

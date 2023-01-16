@@ -20,7 +20,9 @@ fun NavGraphBuilder.featureStatsNavGraph(
         composable(
             route = MiAssistScreenDestination.UsageListScreenDestination.routeId
         ) {
-            UsageListScreen()
+            UsageListScreen(
+                snackbarHostState = snackbarHostState
+            )
         }
 
         composable(

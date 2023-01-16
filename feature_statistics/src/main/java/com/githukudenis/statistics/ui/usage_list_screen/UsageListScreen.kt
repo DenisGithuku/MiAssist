@@ -6,8 +6,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLifecycleOwner
@@ -20,7 +22,9 @@ import androidx.lifecycle.flowWithLifecycle
 
 @OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
-fun UsageListScreen() {
+fun UsageListScreen(
+    snackbarHostState: SnackbarHostState
+) {
     val usageScreenListViewModel: UsageScreenListViewModel = hiltViewModel()
     val lifecycleOwner = LocalLifecycleOwner.current
     val viewModelState = remember(usageScreenListViewModel.uiState, lifecycleOwner) {
@@ -32,6 +36,13 @@ fun UsageListScreen() {
 
     val screenState = viewModelState.collectAsStateWithLifecycle(initialValue = UsageStatsScreenUiState()).value
 
+    LaunchedEffect(screenState.userMessages, snackbarHostState) {
+        val userMessage = screenState.userMessages[0]
+        snackbarHostState.showSnackbar(
+            message = userMessage.message ?: return@LaunchedEffect
+        )
+        usageScreenListViewModel.onEvent(UsageScreenListEvent.OnShowUserMessage(userMessage = userMessage))
+    }
     UsageListScreen(
         usageStats = screenState.data
     )

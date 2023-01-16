@@ -1,7 +1,6 @@
 package com.githukudenis.statistics.di
 
 import android.content.Context
-import com.githukudenis.statistics.data.AppUsageProvider
 import com.githukudenis.statistics.data.repository.AppStatsRepositoryImpl
 import com.githukudenis.statistics.domain.repository.AppStatsRepository
 import dagger.Module
@@ -17,17 +16,9 @@ object TasksModule {
 
     @Provides
     @Singleton
-    fun provideAppUsageProvider(
-        @ApplicationContext context: Context
-    ): AppUsageProvider {
-        return AppUsageProvider(context)
-    }
-
-    @Provides
-    @Singleton
     fun provideAppStatsRepository(
-        appUsageProvider: AppUsageProvider
+        @ApplicationContext context: Context
     ): AppStatsRepository {
-        return AppStatsRepositoryImpl(appUsageProvider)
+        return AppStatsRepositoryImpl(context)
     }
 }
