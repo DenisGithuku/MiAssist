@@ -1,11 +1,9 @@
-package com.githukudenis.miassist.ui.task_list
+package com.githukudenis.tasks.ui.task_list
 
-import com.githukudenis.miassist.data.FakeTasksRepository
-import com.githukudenis.miassist.data.local.Priority
-import com.githukudenis.miassist.data.local.TaskEntity
-import com.githukudenis.miassist.util.MainCoroutineRule
-import com.githukudenis.tasks.ui.task_list.TaskListEvent
-import com.githukudenis.tasks.ui.task_list.TaskListViewModel
+import com.denisgithuku.tasks.data.local.Priority
+import com.denisgithuku.tasks.data.local.TaskEntity
+import com.githukudenis.tasks.data.FakeTasksRepository
+import com.githukudenis.tasks.util.MainCoroutineRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.*

@@ -1,13 +1,11 @@
-package com.githukudenis.miassist.ui.task_detail
+package com.githukudenis.tasks.ui.task_detail
 
 import androidx.lifecycle.SavedStateHandle
-import com.githukudenis.miassist.data.FakeTasksRepository
-import com.githukudenis.miassist.data.local.TaskEntity
-import com.githukudenis.miassist.util.MainCoroutineRule
-import com.githukudenis.miassist.util.OrderType
-import com.githukudenis.miassist.util.SortType
-import com.githukudenis.tasks.ui.task_detail.TaskDetailEvent
-import com.githukudenis.tasks.ui.task_detail.TaskDetailViewModel
+import com.denisgithuku.tasks.data.local.TaskEntity
+import com.githukudenis.tasks.data.FakeTasksRepository
+import com.githukudenis.tasks.util.MainCoroutineRule
+import com.githukudenis.tasks.util.OrderType
+import com.githukudenis.tasks.util.SortType
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
