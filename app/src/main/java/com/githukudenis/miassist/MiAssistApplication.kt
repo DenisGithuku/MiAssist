@@ -1,8 +1,10 @@
 package com.githukudenis.miassist
 
 import android.app.Application
-import androidx.core.app.NotificationChannelCompat
-import androidx.core.app.NotificationCompat
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
+import android.os.Build
 import dagger.hilt.android.HiltAndroidApp
 
 const val notificationChannelId: String = "miassist_notifications"
@@ -10,10 +12,21 @@ const val notificationChannelName: String = "Tasks Reminders"
 
 @HiltAndroidApp
 class MiAssistApplication : Application() {
+
     override fun onCreate() {
         super.onCreate()
-        NotificationChannelCompat.Builder(
-            notificationChannelId, NotificationCompat.PRIORITY_DEFAULT
-        ).setShowBadge(true).setVibrationEnabled(true).build()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(
+                notificationChannelId,
+                notificationChannelName,
+                NotificationManager.IMPORTANCE_HIGH
+            ).apply {
+                setShowBadge(true)
+                enableVibration(true)
+            }
+            val notificationManager =
+                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
     }
 }

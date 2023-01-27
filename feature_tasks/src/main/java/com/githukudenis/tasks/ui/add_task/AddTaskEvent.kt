@@ -9,4 +9,7 @@ sealed interface AddTaskEvent {
     data class SaveTask(val taskEntity: TaskEntity) : AddTaskEvent
     data class ShowUserMessage(val userMessage: UserMessage) : AddTaskEvent
     data class DismissUserMessage(val userMessage: UserMessage) : AddTaskEvent
+    object SetReminder : AddTaskEvent
+    data class ChangeAlarmTime(val time: Long) : AddTaskEvent
+    data class ChangeAlarmTitle(val title: String) : AddTaskEvent
 }

@@ -1,8 +1,7 @@
-package com.denisgithuku.tasks.di
+package com.githukudenis.tasks.di
 
 import android.content.Context
 import androidx.room.Room
-import com.githukudenis.tasks.data.local.TasksRepositoryImpl
 import com.githukudenis.tasks.data.local.TasksDao
 import com.githukudenis.tasks.data.local.TasksDataSource
 import com.githukudenis.tasks.data.local.TasksDatabase
@@ -38,12 +37,8 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideTasksDataSource(tasksDao: TasksDao): TasksDataSource = TasksDataSource(tasksDao)
-
-    @Provides
-    @Singleton
     fun provideTasksRepository(
-        tasksDataSource: TasksDataSource,
+        tasksDao: TasksDao,
         @ApplicationContext context: Context
-    ): TasksRepository = TasksRepositoryImpl(tasksDataSource = tasksDataSource, context)
+    ): TasksRepository = TasksDataSource(tasksDao = tasksDao, context = context)
 }

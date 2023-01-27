@@ -27,7 +27,6 @@ class MainActivity : ComponentActivity() {
 
     private lateinit var permissionLauncher: ActivityResultLauncher<Array<String>>
 
-
     @OptIn(ExperimentalMaterial3Api::class)
     @RequiresApi(Build.VERSION_CODES.O)
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -36,12 +35,8 @@ class MainActivity : ComponentActivity() {
 
         permissionLauncher = registerForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()
-        ){
-
+        ) {
         }
-
-        
-
 
         setContent {
             TodoeyTheme {

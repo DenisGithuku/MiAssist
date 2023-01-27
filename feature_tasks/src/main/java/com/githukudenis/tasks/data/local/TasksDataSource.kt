@@ -1,8 +1,14 @@
 package com.githukudenis.tasks.data.local
 
+import android.app.AlarmManager
+import android.app.PendingIntent
+import android.content.Context
+import android.content.Intent
 import android.util.Log
+import androidx.core.app.AlarmManagerCompat
 import com.denisgithuku.tasks.data.local.TaskEntity
 import com.githukudenis.tasks.domain.TasksRepository
+import com.githukudenis.tasks.ui.AlarmReceiver
 import com.githukudenis.tasks.util.OrderType
 import com.githukudenis.tasks.util.SortType
 import kotlinx.coroutines.Dispatchers
@@ -14,7 +20,8 @@ import javax.inject.Inject
 private const val TAG = "TasksDataSourceError"
 
 class TasksDataSource @Inject constructor(
-    private val tasksDao: TasksDao
+    private val tasksDao: TasksDao,
+    private val context: Context
 ) : TasksRepository {
     override suspend fun addTask(taskEntity: TaskEntity) {
         return tasksDao.insertTask(taskEntity)
@@ -99,6 +106,17 @@ class TasksDataSource @Inject constructor(
     }
 
     override suspend fun setTaskReminder(alarmTime: Long, taskTitle: String) {
-        TODO("Not yet implemented")
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val intent = Intent(context, AlarmReceiver::class.java).apply {
+            putExtra("Message", taskTitle)
+        }
+
+        val pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        AlarmManagerCompat.setExactAndAllowWhileIdle(
+            alarmManager,
+            AlarmManager.RTC_WAKEUP,
+            alarmTime,
+            pendingIntent
+        )
     }
 }

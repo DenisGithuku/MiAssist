@@ -26,7 +26,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.flowWithLifecycle
 import com.denisgithuku.tasks.data.local.Priority
 import com.denisgithuku.tasks.data.local.TaskEntity
@@ -38,7 +37,6 @@ import com.githukudenis.tasks.util.SortType
 
 @OptIn(
     ExperimentalMaterial3Api::class,
-    ExperimentalLifecycleComposeApi::class,
     ExperimentalAnimationApi::class,
     ExperimentalAnimationApi::class
 )

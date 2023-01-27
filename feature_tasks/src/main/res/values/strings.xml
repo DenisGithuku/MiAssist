@@ -9,8 +9,8 @@
     <string name="time_dialog_title">Pick a time</string>
     <string name="empty_fields">Fields cannot be empty</string>
     <string name="mark_complete">Complete task</string>
-    <string name="todo_detail_title">Todo Detail</string>
+    <string name="todo_detail_title">Task Detail</string>
     <string name="delete_task">Delete</string>
     <string name="expand">Expand</string>
-    <string name="collpase">Collpase</string>
+    <string name="collpase">Collapse</string>
 </resources>

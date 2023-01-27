@@ -1,9 +1,9 @@
+
+
 package com.githukudenis.tasks.ui.add_task
 
 import android.annotation.SuppressLint
 import android.os.Build
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
@@ -19,26 +19,24 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.denisgithuku.tasks.data.local.Priority
 import com.denisgithuku.tasks.data.local.TaskEntity
 import com.githukudenis.core_data.util.UserMessage
 import com.githukudenis.tasks.R
 import com.githukudenis.tasks.ui.add_task.components.PriorityChip
 import com.githukudenis.tasks.ui.add_task.components.TaskInput
-import com.google.accompanist.permissions.MultiplePermissionsState
-import com.google.accompanist.permissions.rememberMultiplePermissionsState
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.datetime.date.datepicker
 import com.vanpra.composematerialdialogs.datetime.time.timepicker
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 
-@OptIn(ExperimentalLifecycleComposeApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalPermissionsApi::class, ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.O)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -50,14 +48,9 @@ fun AddTaskScreen(
 
 ) {
     val context = LocalContext.current
-    val permissionState = rememberMultiplePermissionsState(
-        permissions = listOf(
-        android.Manifest.permission.SCHEDULE_EXACT_ALARM,
-        android.Manifest.permission.POST_NOTIFICATIONS
-        )
-    )
     val addTaskViewModel: AddTaskViewModel = hiltViewModel()
-    val state = addTaskViewModel.state.collectAsStateWithLifecycle().value
+
+    val state = addTaskViewModel.state.collectAsState().value
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -99,18 +92,28 @@ fun AddTaskScreen(
                 addTaskViewModel.onEvent(AddTaskEvent.ChangeTaskPriority(priority = newPriority))
             },
             priorities = state.priorities,
-            multiplePermissionsState = permissionState,
+            onSetReminder = {
+                addTaskViewModel.onEvent(AddTaskEvent.SetReminder)
+            },
             onSaveTask = { todoEntity ->
                 addTaskViewModel.onEvent(AddTaskEvent.SaveTask(todoEntity))
                 onSaveTask()
             },
             onShowUserMessage = { userMessage ->
                 addTaskViewModel.onEvent(AddTaskEvent.ShowUserMessage(userMessage = userMessage))
-            }
+            },
+            onAlarmTimeChange = { time ->
+                addTaskViewModel.onEvent(AddTaskEvent.ChangeAlarmTime(time))
+            },
+            onAlarmTitleChange = { title ->
+                addTaskViewModel.onEvent(AddTaskEvent.ChangeAlarmTitle(title))
+            },
+            snackbarHostState = snackbarHostState
         )
     }
 }
 
+@OptIn(ExperimentalPermissionsApi::class, ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 private fun AddTaskScreen(
@@ -118,10 +121,12 @@ private fun AddTaskScreen(
     priority: Priority,
     onChangePriority: (Priority) -> Unit,
     priorities: List<Priority>,
-    multiplePermissionsState: MultiplePermissionsState,
     onSaveTask: (TaskEntity) -> Unit,
     onSetReminder: () -> Unit,
-    onShowUserMessage: (UserMessage) -> Unit
+    onAlarmTimeChange: (Long) -> Unit,
+    onAlarmTitleChange: (String) -> Unit,
+    onShowUserMessage: (UserMessage) -> Unit,
+    snackbarHostState: SnackbarHostState
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -178,6 +183,7 @@ private fun AddTaskScreen(
             },
             onValueChange = { newValue ->
                 todoTitle = newValue
+                onAlarmTitleChange(newValue)
             },
             hint = R.string.todo_title_hint
         )
@@ -247,8 +253,14 @@ private fun AddTaskScreen(
 
         Row(
             modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Checkbox(checked = reminderEnabled, onCheckedChange = { reminderEnabled = it })
+            Checkbox(
+                checked = reminderEnabled,
+                onCheckedChange = {
+                    reminderEnabled = it
+                }
+            )
             Text(
                 text = "Set reminder"
             )
@@ -271,20 +283,20 @@ private fun AddTaskScreen(
                         taskDueDate = pickedDate,
                         priority = priority
                     )
-                        if (reminderEnabled && multiplePermissionsState.allPermissionsGranted) {
-                            onSaveTask(taskEntity).also {
-                                val calendar = Calendar.getInstance()
-                                calendar.set(
-                                    Calendar.DATE = pickedDate,
-
-                                )
-                                onSetReminder(, String)
-                            }
-                        } else if (reminderEnabled && !multiplePermissionsState.allPermissionsGranted) {
-                            multiplePermissionsState.launchMultiplePermissionRequest()
-                        } else {
-
+                    if (reminderEnabled) {
+                        val calendar = Calendar.getInstance()
+                        calendar.set(Calendar.DATE, pickedDate.dayOfMonth)
+                        calendar.set(Calendar.HOUR_OF_DAY, pickedTime.hour)
+                        onSetReminder()
+                        scope.launch {
+                            snackbarHostState.showSnackbar(
+                                message = "Reminder scheduled for $formattedDate at $formattedTime"
+                            )
                         }
+                        onSaveTask(taskEntity)
+                    } else {
+                        onSaveTask(taskEntity)
+                    }
                 }
             }
         ) {
@@ -334,6 +346,10 @@ private fun AddTaskScreen(
             title = context.getString(R.string.time_dialog_title)
         ) { time ->
             pickedTime = time
+            val calendar = Calendar.getInstance()
+            calendar.set(Calendar.DATE, pickedDate.dayOfMonth)
+            calendar.set(Calendar.HOUR_OF_DAY, pickedTime.hour)
+            onAlarmTimeChange(calendar.timeInMillis)
         }
     }
 }

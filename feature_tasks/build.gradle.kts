@@ -79,7 +79,7 @@ dependencies {
     implementation(Dependencies.coroutines_core)
     implementation(Dependencies.coroutines_android)
 
-    //accompanist permissions
+    // accompanist permissions
     implementation(Dependencies.compose_accompanist_permissions)
 
     // navigation

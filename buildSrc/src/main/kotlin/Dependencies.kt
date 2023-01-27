@@ -29,7 +29,7 @@ object Versions {
     val system_ui_controller = "0.28.0"
     val compose_material = "1.0.1"
     val espresso = "3.5.0"
-    val accompanist_version = "0.29.0-alpha"
+    val accompanist_version = "0.28.0"
     val android_core = "1.9.0"
 }
 object Dependencies {

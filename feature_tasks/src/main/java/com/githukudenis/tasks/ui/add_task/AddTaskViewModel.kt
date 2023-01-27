@@ -20,12 +20,21 @@ class AddTaskViewModel @Inject constructor(
     private var _state = MutableStateFlow(AddTaskUiState())
     val state: StateFlow<AddTaskUiState> get() = _state
 
-    fun saveTask(taskEntity: TaskEntity) {
+    private fun saveTask(taskEntity: TaskEntity) {
         viewModelScope.launch {
             tasksRepository.addTask(taskEntity)
             _state.update { state ->
                 state.copy(todoAdded = true)
             }
+        }
+    }
+
+    private fun setReminder(time: Long, taskTitle: String) {
+        viewModelScope.launch {
+            tasksRepository.setTaskReminder(
+                alarmTime = time,
+                taskTitle = taskTitle
+            )
         }
     }
 
@@ -38,7 +47,7 @@ class AddTaskViewModel @Inject constructor(
             }
 
             is AddTaskEvent.SaveTask -> {
-                saveTask(addTaskEvent.taskEntity).
+                saveTask(addTaskEvent.taskEntity)
             }
 
             is AddTaskEvent.ShowUserMessage -> {
@@ -53,6 +62,26 @@ class AddTaskViewModel @Inject constructor(
                 val userMessages = _state.value.userMessages.filterNot { message -> message == addTaskEvent.userMessage }
                 _state.update {
                     it.copy(userMessages = userMessages)
+                }
+            }
+            is AddTaskEvent.SetReminder -> {
+                setReminder(
+                    time = _state.value.reminderState.time ?: return,
+                    taskTitle = _state.value.reminderState.title ?: return
+                )
+            }
+            is AddTaskEvent.ChangeAlarmTime -> {
+                _state.update { state ->
+                    val reminderState = state.reminderState.copy(time = addTaskEvent.time)
+                    state.copy(
+                        reminderState = reminderState
+                    )
+                }
+            }
+            is AddTaskEvent.ChangeAlarmTitle -> {
+                _state.update { state ->
+                    val reminderState = state.reminderState.copy(title = addTaskEvent.title)
+                    state.copy(reminderState = reminderState)
                 }
             }
         }

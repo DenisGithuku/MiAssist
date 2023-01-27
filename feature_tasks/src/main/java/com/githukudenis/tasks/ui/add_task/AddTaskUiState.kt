@@ -5,10 +5,16 @@ import com.githukudenis.core_data.util.UserMessage
 
 data class AddTaskUiState(
     val todoState: TodoState = TodoState(),
+    val reminderState: ReminderState = ReminderState(),
     val todoAdded: Boolean = false,
     val priority: Priority = Priority.LOW,
     val priorities: List<Priority> = listOf(Priority.HIGH, Priority.MODERATE, Priority.LOW),
     val userMessages: List<UserMessage> = emptyList()
+)
+
+data class ReminderState(
+    val time: Long? = null,
+    val title: String? = null
 )
 
 data class TodoState(

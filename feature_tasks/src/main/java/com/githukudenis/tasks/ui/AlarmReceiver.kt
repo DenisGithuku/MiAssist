@@ -9,7 +9,7 @@ import com.githukudenis.tasks.R
 import com.githukudenis.tasks.util.Constants
 
 private const val notificationId: Int = 1001
-class AlarmReceiver: BroadcastReceiver() {
+class AlarmReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
         intent?.let {
             notify(
@@ -26,10 +26,10 @@ class AlarmReceiver: BroadcastReceiver() {
         val notification = NotificationCompat.Builder(context, channelId)
             .setContentTitle("Task Reminder")
             .setContentText(message)
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setAutoCancel(true)
             .setSmallIcon(R.drawable.clock)
             .build()
-
 
         notificationManager.notify(
             notificationId,

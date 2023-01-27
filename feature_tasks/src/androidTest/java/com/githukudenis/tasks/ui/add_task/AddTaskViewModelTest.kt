@@ -1,11 +1,10 @@
-package com.githukudenis.miassist.ui.add_task
+package com.githukudenis.tasks.ui.add_task
 
-import com.githukudenis.miassist.data.FakeTasksRepository
-import com.githukudenis.miassist.data.local.TaskEntity
-import com.githukudenis.miassist.util.MainCoroutineRule
-import com.githukudenis.miassist.util.OrderType
-import com.githukudenis.miassist.util.SortType
-import com.githukudenis.tasks.ui.add_task.AddTaskViewModel
+import com.denisgithuku.tasks.data.local.TaskEntity
+import com.githukudenis.tasks.data.FakeTasksRepository
+import com.githukudenis.tasks.util.MainCoroutineRule
+import com.githukudenis.tasks.util.OrderType
+import com.githukudenis.tasks.util.SortType
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
@@ -26,7 +25,7 @@ class AddTaskViewModelTest {
         val addTaskViewModel = AddTaskViewModel(todoRepo)
         val todo = TaskEntity(taskId = 10, taskTitle = "")
 
-        addTaskViewModel.saveTask(todo)
+        addTaskViewModel.onEvent(AddTaskEvent.SaveTask(todo))
         val todos = todoRepo.getAllTasks(SortType.DUE_DATE, OrderType.ASCENDING).first()
 
         assertThat(todos).contains(todo)
@@ -38,7 +37,7 @@ class AddTaskViewModelTest {
         val addTaskViewModel = AddTaskViewModel(todoRepo)
         val todo = TaskEntity(taskId = 10, taskTitle = "")
 
-        addTaskViewModel.saveTask(todo)
+        addTaskViewModel.onEvent(AddTaskEvent.SaveTask(todo))
         val viewModelState = addTaskViewModel.state.value
 
         assertEquals(viewModelState.todoAdded, true)
