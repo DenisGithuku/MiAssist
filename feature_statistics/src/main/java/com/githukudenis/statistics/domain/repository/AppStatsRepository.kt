@@ -1,9 +1,9 @@
 package com.githukudenis.statistics.domain.repository
 
-import android.app.usage.UsageStats
+import com.githukudenis.statistics.domain.model.AppUsageStatsInfo
 import kotlinx.coroutines.flow.Flow
 
 interface AppStatsRepository {
 
-    suspend fun getUsageStats(): Flow<List<UsageStats>>
+    suspend fun getUsageStats(): Flow<List<AppUsageStatsInfo>>
 }
