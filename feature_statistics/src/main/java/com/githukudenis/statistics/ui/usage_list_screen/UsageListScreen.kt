@@ -99,6 +99,7 @@ private fun UsageListScreen(
     appUsageStatsInfoList: List<UsageStats>,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
     LazyColumn {
         items(appUsageStatsInfoList) { usageStat ->
             Column(

@@ -3,7 +3,6 @@ package com.githukudenis.statistics.data.repository
 import android.app.usage.UsageStats
 import android.app.usage.UsageStatsManager
 import android.content.Context
-import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.os.Build
 import android.util.Log
@@ -45,20 +44,21 @@ class AppStatsRepositoryImpl(
         /*
         Filter apps that do not belong to the system
          */
-        installedApps.filterNot { applicationInfo ->
-            applicationInfo.flags == ApplicationInfo.FLAG_SYSTEM
+        val packageManager = context.packageManager
+        val nonSystemApps = installedApps.filterNot { applicationInfo ->
+            packageManager.getLaunchIntentForPackage(applicationInfo.packageName) == null
         }
 
         /*
         Only return stats for applications that do not belong to the system
          */
-        usageStatsList.filter { usageStats ->
-            installedApps.any { installedApp -> installedApp.packageName == usageStats.packageName }
+        val filteredStats = usageStatsList.filter { usageStats ->
+            nonSystemApps.any { applicationInfo -> applicationInfo.packageName == usageStats.packageName }
         }
         /*
         Transform into application info data class
          */
-//        val appInfoList = usageStatsList.mapNotNull { stats ->
+//        val appInfoList = filteredStats.map { stats ->
 //            AppUsageStatsInfo(
 //                appName = installedApps.first { it.packageName == stats.packageName }.name,
 //                packageName = stats.packageName,
@@ -66,7 +66,8 @@ class AppStatsRepositoryImpl(
 //                totalTimeInForeground = stats.totalTimeInForeground
 //            )
 //        }
-        Log.e(TAG, "getUsageStats: $usageStatsList")
-        emit(usageStatsList)
+        Log.e(TAG, "getUsageStats: ${nonSystemApps.map { packageManager.getApplicationLabel(it) }}")
+//        Log.e(TAG, "getUsageStats: ${appInfoList.map { it.appName }}")
+        emit(filteredStats)
     }
 }

@@ -349,6 +349,8 @@ private fun AddTaskScreen(
             val calendar = Calendar.getInstance()
             calendar.set(Calendar.DATE, pickedDate.dayOfMonth)
             calendar.set(Calendar.HOUR_OF_DAY, pickedTime.hour)
+            calendar.set(Calendar.MINUTE, pickedTime.minute)
+            calendar.set(Calendar.SECOND, pickedTime.second)
             onAlarmTimeChange(calendar.timeInMillis)
         }
     }

@@ -1,8 +1,8 @@
-package com.githukudenis.miassist.di
+package com.githukudenis.tasks.di
 
 import android.content.Context
 import androidx.room.Room
-import com.githukudenis.miassist.data.local.TasksDatabase
+import com.githukudenis.tasks.data.local.TasksDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
