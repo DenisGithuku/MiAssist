@@ -3,6 +3,7 @@ package com.githukudenis.statistics.di
 import android.content.Context
 import com.githukudenis.statistics.data.repository.AppStatsRepositoryImpl
 import com.githukudenis.statistics.domain.repository.AppStatsRepository
+import com.githukudenis.statistics.util.ApplicationInfoMapper
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -12,13 +13,20 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object TasksModule {
+object StatsModule {
 
     @Provides
     @Singleton
     fun provideAppStatsRepository(
-        @ApplicationContext context: Context
+        @ApplicationContext context: Context,
+        applicationInfoMapper: ApplicationInfoMapper
     ): AppStatsRepository {
-        return AppStatsRepositoryImpl(context)
+        return AppStatsRepositoryImpl(context, applicationInfoMapper)
+    }
+
+    @Provides
+    @Singleton
+    fun provideApplicationInfoMapper(@ApplicationContext context: Context): ApplicationInfoMapper {
+        return ApplicationInfoMapper(context)
     }
 }

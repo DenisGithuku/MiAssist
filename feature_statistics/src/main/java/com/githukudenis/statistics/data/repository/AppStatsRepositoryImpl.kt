@@ -1,13 +1,15 @@
 package com.githukudenis.statistics.data.repository
 
-import android.app.usage.UsageStats
+import android.annotation.SuppressLint
 import android.app.usage.UsageStatsManager
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
+import com.githukudenis.statistics.domain.model.AppUsageStatsInfo
 import com.githukudenis.statistics.domain.repository.AppStatsRepository
+import com.githukudenis.statistics.util.ApplicationInfoMapper
 import com.githukudenis.statistics.util.hasUsagePermissions
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -15,10 +17,12 @@ import java.util.*
 
 private const val TAG = "stats_list"
 class AppStatsRepositoryImpl(
-    private val context: Context
+    private val context: Context,
+    private val applicationInfoMapper: ApplicationInfoMapper
 ) : AppStatsRepository {
+    @SuppressLint("NewApi")
     @RequiresApi(Build.VERSION_CODES.O)
-    override suspend fun getUsageStats(): Flow<List<UsageStats>> = flow {
+    override suspend fun getUsageStats(): Flow<List<AppUsageStatsInfo>> = flow {
         if (!context.hasUsagePermissions()) {
             throw Throwable(message = "This app needs permissions to access app usage.")
         }
@@ -58,16 +62,29 @@ class AppStatsRepositoryImpl(
         /*
         Transform into application info data class
          */
-//        val appInfoList = filteredStats.map { stats ->
-//            AppUsageStatsInfo(
-//                appName = installedApps.first { it.packageName == stats.packageName }.name,
-//                packageName = stats.packageName,
-//                lastTimeUsed = stats.lastTimeUsed,
-//                totalTimeInForeground = stats.totalTimeInForeground
-//            )
-//        }
+        val appInfoList = filteredStats
+            .sortedBy {
+                it.totalTimeInForeground
+            }
+            .map { stats ->
+                AppUsageStatsInfo(
+                    appName = nonSystemApps.find { stats.packageName == it.packageName }.run {
+                        this?.let {
+                            applicationInfoMapper.getApplicationName(it)
+                        }
+                    }.toString(),
+                    packageName = stats.packageName,
+                    lastTimeUsed = stats.lastTimeUsed,
+                    totalTimeInForeground = applicationInfoMapper.getTimeFromMillis(stats.totalTimeInForeground),
+                    icon = nonSystemApps.find { stats.packageName == it.packageName }.run {
+                        this?.let {
+                            applicationInfoMapper.getIconFromPackage(it)
+                        }
+                    }
+                )
+            }
         Log.e(TAG, "getUsageStats: ${nonSystemApps.map { packageManager.getApplicationLabel(it) }}")
-//        Log.e(TAG, "getUsageStats: ${appInfoList.map { it.appName }}")
-        emit(filteredStats)
+        Log.e(TAG, "getUsageStats appInfoList: ${appInfoList.map { it.appName }}")
+        emit(appInfoList)
     }
 }

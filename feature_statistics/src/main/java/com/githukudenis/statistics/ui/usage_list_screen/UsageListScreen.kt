@@ -1,15 +1,13 @@
 package com.githukudenis.statistics.ui.usage_list_screen
 
-import android.app.usage.UsageStats
 import android.content.Intent
 import android.provider.Settings
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
@@ -18,6 +16,7 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.githukudenis.statistics.domain.model.AppUsageStatsInfo
 import com.githukudenis.statistics.util.hasUsagePermissions
 
 @OptIn(ExperimentalLifecycleComposeApi::class)
@@ -96,22 +95,31 @@ fun UsageListScreen(
 
 @Composable
 private fun UsageListScreen(
-    appUsageStatsInfoList: List<UsageStats>,
+    appUsageStatsInfoList: List<AppUsageStatsInfo>,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
-    LazyColumn {
+    LazyColumn(
+        modifier = modifier.padding(8.dp)
+    ) {
         items(appUsageStatsInfoList) { usageStat ->
-            Column(
+            Row(
                 modifier = modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(4.dp)
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                Text(
-                    text = usageStat.packageName
-                )
-                Text(
-                    text = "${usageStat.totalTimeInForeground}"
-                )
+                Column(
+                    modifier = modifier.fillMaxWidth()
+                        .padding(vertical = 8.dp)
+                ) {
+                    Text(
+                        text = usageStat.appName ?: return@Column
+                    )
+                    Spacer(modifier = modifier.height(8.dp))
+                    Text(
+                        text = usageStat.totalTimeInForeground ?: return@Column
+                    )
+                }
             }
         }
     }
