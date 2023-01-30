@@ -2,6 +2,7 @@ package com.githukudenis.statistics.ui.usage_list_screen
 
 import android.content.Intent
 import android.provider.Settings
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -18,6 +19,7 @@ import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.githukudenis.statistics.domain.model.AppUsageStatsInfo
 import com.githukudenis.statistics.util.hasUsagePermissions
+import com.google.accompanist.drawablepainter.rememberDrawablePainter
 
 @OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
@@ -106,16 +108,21 @@ private fun UsageListScreen(
             Row(
                 modifier = modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
+                Image(
+                    painter = rememberDrawablePainter(drawable = usageStat.icon),
+                    contentDescription = "App icon"
+                )
                 Column(
-                    modifier = modifier.fillMaxWidth()
-                        .padding(vertical = 8.dp)
+                    modifier = modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 12.dp)
                 ) {
                     Text(
                         text = usageStat.appName ?: return@Column
                     )
-                    Spacer(modifier = modifier.height(8.dp))
+                    Spacer(modifier = modifier.height(12.dp))
                     Text(
                         text = usageStat.totalTimeInForeground ?: return@Column
                     )

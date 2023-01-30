@@ -70,8 +70,11 @@ object Dependencies {
 // date time picker
     val datepicker = "io.github.vanpra.compose-material-dialogs:datetime:${Versions.date_picker}"
 
-// accompanist
+// insets
     val systemui_controller = "com.google.accompanist:accompanist-systemuicontroller:${Versions.system_ui_controller}"
+
+    // accompanist drawable painter
+    val drawable_painter = "com.google.accompanist:accompanist-drawablepainter:${Versions.accompanist_version}"
 
 // room
     val room_runtime = "androidx.room:room-runtime:${Versions.room}"
