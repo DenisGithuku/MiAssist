@@ -63,7 +63,7 @@ class AppStatsRepositoryImpl(
         Transform into application info data class
          */
         val appInfoList = filteredStats
-            .sortedBy {
+            .sortedByDescending {
                 it.totalTimeInForeground
             }
             .map { stats ->
