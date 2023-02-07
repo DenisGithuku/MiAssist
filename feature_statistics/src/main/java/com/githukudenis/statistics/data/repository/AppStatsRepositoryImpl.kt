@@ -11,8 +11,10 @@ import com.githukudenis.statistics.domain.model.AppUsageStatsInfo
 import com.githukudenis.statistics.domain.repository.AppStatsRepository
 import com.githukudenis.statistics.util.ApplicationInfoMapper
 import com.githukudenis.statistics.util.hasUsagePermissions
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import java.util.*
 
 private const val TAG = "stats_list"
@@ -33,15 +35,13 @@ class AppStatsRepositoryImpl(
         /*
         Set the calendar time to midnight; start of day
          */
-        calendar.set(Calendar.MILLISECOND, 0)
-        calendar.set(Calendar.MINUTE, 0)
-        calendar.set(Calendar.SECOND, 0)
-        calendar.set(Calendar.HOUR_OF_DAY, 0)
-        val startOfDay = calendar.timeInMillis
+        val endTime = calendar.timeInMillis
+        calendar.add(Calendar.DAY_OF_WEEK, -1)
+        val startTime = calendar.timeInMillis
         val usageStatsList = usageStatsManager.queryUsageStats(
             UsageStatsManager.INTERVAL_DAILY,
-            startOfDay,
-            System.currentTimeMillis()
+            startTime,
+            endTime
         )
         val installedApps = context.packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
 
@@ -75,7 +75,7 @@ class AppStatsRepositoryImpl(
                     }.toString(),
                     packageName = stats.packageName,
                     lastTimeUsed = stats.lastTimeUsed,
-                    totalTimeInForeground = applicationInfoMapper.getTimeFromMillis(stats.totalTimeInForeground),
+                    totalTimeInForeground = stats.totalTimeInForeground,
                     icon = nonSystemApps.find { stats.packageName == it.packageName }.run {
                         this?.let {
                             applicationInfoMapper.getIconFromPackage(it)
@@ -86,5 +86,5 @@ class AppStatsRepositoryImpl(
         Log.e(TAG, "getUsageStats: ${nonSystemApps.map { packageManager.getApplicationLabel(it) }}")
         Log.e(TAG, "getUsageStats appInfoList: ${appInfoList.map { it.appName }}")
         emit(appInfoList)
-    }
+    }.flowOn(Dispatchers.IO)
 }

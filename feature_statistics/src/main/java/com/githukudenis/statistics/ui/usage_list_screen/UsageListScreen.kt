@@ -2,6 +2,7 @@ package com.githukudenis.statistics.ui.usage_list_screen
 
 import android.content.Intent
 import android.provider.Settings
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -10,6 +11,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
@@ -18,6 +20,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.githukudenis.statistics.domain.model.AppUsageStatsInfo
+import com.githukudenis.statistics.util.ApplicationInfoMapper
 import com.githukudenis.statistics.util.hasUsagePermissions
 import com.google.accompanist.drawablepainter.rememberDrawablePainter
 
@@ -81,6 +84,18 @@ fun UsageListScreen(
     val lifecycleOwner = LocalLifecycleOwner.current
     val screenState = usageScreenListViewModel.uiState.collectAsStateWithLifecycle().value
 
+    if (screenState.isLoading) {
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                CircularProgressIndicator()
+                Spacer(modifier = Modifier.height(10.dp))
+                Text(
+                    text = "Loading apps..."
+                )
+            }
+        }
+    }
+
     if (screenState.userMessages.isNotEmpty()) {
         LaunchedEffect(screenState.userMessages, snackbarHostState) {
             val userMessage = screenState.userMessages[0]
@@ -101,9 +116,38 @@ private fun UsageListScreen(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
+    val applicationInfoMapper = ApplicationInfoMapper(context)
     LazyColumn(
         modifier = modifier.padding(8.dp)
     ) {
+        item {
+            val sumOfValues = appUsageStatsInfoList.sumOf { it.totalTimeInForeground?.toInt() ?: 0 }.toFloat()
+
+            val proportions = appUsageStatsInfoList.map {
+                it.totalTimeInForeground?.toFloat()
+            }.map {
+                it?.let { it * 100 / sumOfValues }
+            }
+
+            val sweepAngles = proportions.map {
+                it?.let {
+                    it * 360 / 100
+                }
+            }
+            Canvas(modifier = modifier.size(100.dp)) {
+                var startAngle = -90f
+
+                for (i in sweepAngles.indices) {
+                    drawArc(
+                        color = Color.Blue,
+                        startAngle = startAngle,
+                        sweepAngle = sweepAngles[i]!!,
+                        useCenter = false
+                    )
+                    startAngle += sweepAngles[i]!!
+                }
+            }
+        }
         items(appUsageStatsInfoList) { usageStat ->
             Row(
                 modifier = modifier.fillMaxWidth(),
@@ -124,7 +168,7 @@ private fun UsageListScreen(
                     )
                     Spacer(modifier = modifier.height(12.dp))
                     Text(
-                        text = usageStat.totalTimeInForeground ?: return@Column
+                        text = applicationInfoMapper.getTimeFromMillis(usageStat.totalTimeInForeground) ?: return@Column
                     )
                 }
             }
