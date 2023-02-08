@@ -1,6 +1,7 @@
 package com.githukudenis.statistics.data.repository
 
 import android.annotation.SuppressLint
+import android.app.usage.UsageEvents
 import android.app.usage.UsageStatsManager
 import android.content.Context
 import android.content.pm.PackageManager
@@ -44,6 +45,14 @@ class AppStatsRepositoryImpl(
             endTime
         )
         val installedApps = context.packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
+
+        val event = UsageEvents.Event()
+        val events = usageStatsManager.queryEvents(startTime, endTime)
+
+        while (events.hasNextEvent()) {
+            events.getNextEvent(event)
+            Log.e(TAG, "getUsageStats: ${event.timeStamp} ${event.packageName}")
+        }
 
         /*
         Filter apps that do not belong to the system

@@ -57,7 +57,6 @@ class MainActivity : ComponentActivity() {
                                     navHostController.navigate(
                                         screenDestination.routeId
                                     ) {
-                                        launchSingleTop = true
                                         backStackState?.destination?.parent?.startDestinationRoute?.let { startDestination ->
                                             popUpTo(startDestination)
                                         }
