@@ -12,6 +12,9 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.StrokeJoin
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
@@ -134,17 +137,24 @@ private fun UsageListScreen(
                     it * 360 / 100
                 }
             }
-            Canvas(modifier = modifier.size(100.dp)) {
-                var startAngle = -90f
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+                Canvas(modifier = modifier.size(100.dp)) {
+                    var startAngle = -90f
 
-                for (i in sweepAngles.indices) {
-                    drawArc(
-                        color = Color.Blue,
-                        startAngle = startAngle,
-                        sweepAngle = sweepAngles[i]!!,
-                        useCenter = false
-                    )
-                    startAngle += sweepAngles[i]!!
+                    for (i in sweepAngles.indices) {
+                        drawArc(
+                            color = Color.Blue,
+                            startAngle = startAngle,
+                            sweepAngle = sweepAngles[i]!!,
+                            useCenter = false,
+                            style = Stroke(
+                                width = 8.dp.value,
+                                cap = StrokeCap.Round,
+                                join = StrokeJoin.Round
+                            )
+                        )
+                        startAngle += sweepAngles[i]!!
+                    }
                 }
             }
         }
