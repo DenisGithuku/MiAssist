@@ -34,9 +34,7 @@ fun UsageListScreen(
     onNavigateUp: () -> Unit
 ) {
     val context = LocalContext.current
-    var isDialogOpen by remember {
-        mutableStateOf(false)
-    }
+
     val dialogProperties =
         DialogProperties(dismissOnBackPress = true, dismissOnClickOutside = false)
     val permissionAllowed = remember {
@@ -65,7 +63,6 @@ fun UsageListScreen(
             }
         }, dismissButton = {
             Button(onClick = {
-                isDialogOpen = !isDialogOpen
                 onNavigateUp()
             }) {
                 Text(
@@ -74,10 +71,7 @@ fun UsageListScreen(
                 )
             }
         }, shape = MaterialTheme.shapes.large, onDismissRequest = {
-            if (permissionAllowed.value) {
-                isDialogOpen = !isDialogOpen
-            } else {
-                isDialogOpen = !isDialogOpen
+            if (!permissionAllowed.value) {
                 onNavigateUp()
             }
         })

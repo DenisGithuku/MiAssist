@@ -5,7 +5,6 @@ import android.app.usage.UsageStatsManager
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import com.githukudenis.statistics.domain.model.AppUsageStatsInfo
 import com.githukudenis.statistics.domain.repository.AppStatsRepository
@@ -22,6 +21,7 @@ class AppStatsRepositoryImpl(
     private val context: Context,
     private val applicationInfoMapper: ApplicationInfoMapper
 ) : AppStatsRepository {
+
     @SuppressLint("NewApi")
     @RequiresApi(Build.VERSION_CODES.O)
     override suspend fun getUsageStats(): Flow<List<AppUsageStatsInfo>> = flow {
@@ -32,18 +32,27 @@ class AppStatsRepositoryImpl(
         val usageStatsManager =
             context.getSystemService(Context.USAGE_STATS_SERVICE) as UsageStatsManager
         val calendar = Calendar.getInstance()
+
         /*
         Set the calendar time to midnight; start of day
          */
         val endTime = calendar.timeInMillis
-        calendar.add(Calendar.DAY_OF_WEEK, -1)
+        calendar.set(Calendar.MINUTE, 0)
+        calendar.set(Calendar.HOUR, 0)
+        calendar.set(Calendar.SECOND, 0)
+        calendar.set(Calendar.MILLISECOND, 0)
         val startTime = calendar.timeInMillis
         val usageStatsList = usageStatsManager.queryUsageStats(
-            UsageStatsManager.INTERVAL_DAILY,
+            UsageStatsManager.INTERVAL_BEST,
             startTime,
             endTime
         )
-        val installedApps = context.packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
+
+        /*
+        get installed apps information
+         */
+        val installedApps =
+            context.packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
 
         /*
         Filter apps that do not belong to the system
@@ -54,7 +63,7 @@ class AppStatsRepositoryImpl(
         }
 
         /*
-        Only return stats for applications that do not belong to the system
+        Filter stats belonging to non system apps
          */
         val filteredStats = usageStatsList.filter { usageStats ->
             nonSystemApps.any { applicationInfo -> applicationInfo.packageName == usageStats.packageName }
@@ -74,7 +83,6 @@ class AppStatsRepositoryImpl(
                         }
                     }.toString(),
                     packageName = stats.packageName,
-                    lastTimeUsed = stats.lastTimeUsed,
                     totalTimeInForeground = stats.totalTimeInForeground,
                     icon = nonSystemApps.find { stats.packageName == it.packageName }.run {
                         this?.let {
@@ -83,8 +91,6 @@ class AppStatsRepositoryImpl(
                     }
                 )
             }
-        Log.e(TAG, "getUsageStats: ${nonSystemApps.map { packageManager.getApplicationLabel(it) }}")
-        Log.e(TAG, "getUsageStats appInfoList: ${appInfoList.map { it.appName }}")
         emit(appInfoList)
     }.flowOn(Dispatchers.IO)
 }
