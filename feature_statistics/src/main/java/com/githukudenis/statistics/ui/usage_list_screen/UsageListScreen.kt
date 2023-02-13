@@ -115,39 +115,72 @@ private fun UsageListScreen(
     val context = LocalContext.current
     val applicationInfoMapper = ApplicationInfoMapper(context)
     LazyColumn(
-        modifier = modifier.padding(8.dp)
+        modifier = modifier
+            .fillMaxSize()
+            .padding(vertical = 16.dp, horizontal = 8.dp)
     ) {
         item {
-            val sumOfValues = appUsageStatsInfoList.sumOf { it.totalTimeInForeground?.toInt() ?: 0 }.toFloat()
+            val sumOfAllValues =
+                appUsageStatsInfoList.sumOf { it.totalTimeInForeground.toInt() }.toFloat()
 
-            val proportions = appUsageStatsInfoList.map {
-                it.totalTimeInForeground?.toFloat()
-            }.map {
-                it?.let { it * 100 / sumOfValues }
+            val firstFiveValues =
+                appUsageStatsInfoList.take(4).map { it.totalTimeInForeground.toFloat() }
+                    .toMutableList()
+
+            val sumOfValuesAfterFirstFive =
+                appUsageStatsInfoList.drop(4).sumOf { it.totalTimeInForeground.toInt() }.toFloat()
+
+            firstFiveValues.add(sumOfValuesAfterFirstFive)
+
+            val colors = listOf(
+                Color.Red,
+                Color.Blue,
+                Color.LightGray,
+                Color.Black,
+                Color.Yellow
+            )
+
+            val props = firstFiveValues.map {
+                it * 100 / sumOfAllValues
             }
 
-            val sweepAngles = proportions.map {
-                it?.let {
-                    it * 360 / 100
-                }
+            val angles = props.map {
+                it * 360f / 100
             }
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-                Canvas(modifier = modifier.size(100.dp)) {
+
+//            val proportions = appUsageStatsInfoList.map {
+//                it.totalTimeInForeground?.toFloat()
+//            }.map {
+//                it?.let { it * 100 / sumOfValues }
+//            }
+//
+//            val sweepAngles = proportions.map {
+//                it?.let {
+//                    it * 360 / 100
+//                }
+//            }
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(12.dp),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Canvas(modifier = modifier.size(150.dp)) {
                     var startAngle = -90f
 
-                    for (i in sweepAngles.indices) {
+                    for (i in angles.indices) {
                         drawArc(
-                            color = Color.Blue,
+                            color = colors[i],
                             startAngle = startAngle,
-                            sweepAngle = sweepAngles[i]!!,
+                            sweepAngle = angles[i],
                             useCenter = false,
                             style = Stroke(
-                                width = 8.dp.value,
+                                width = 16.dp.value,
                                 cap = StrokeCap.Round,
                                 join = StrokeJoin.Round
                             )
                         )
-                        startAngle += sweepAngles[i]!!
+                        startAngle += angles[i]
                     }
                 }
             }
@@ -172,7 +205,7 @@ private fun UsageListScreen(
                     )
                     Spacer(modifier = modifier.height(12.dp))
                     Text(
-                        text = applicationInfoMapper.getTimeFromMillis(usageStat.totalTimeInForeground) ?: return@Column
+                        text = applicationInfoMapper.getTimeFromMillis(usageStat.totalTimeInForeground)
                     )
                 }
             }
