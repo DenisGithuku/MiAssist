@@ -2,6 +2,9 @@ package com.githukudenis.statistics.ui.usage_list_screen
 
 import android.content.Intent
 import android.provider.Settings
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.EaseInOut
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -120,16 +123,16 @@ private fun UsageListScreen(
         appUsageStatsInfoList.sumOf { it.totalTimeInForeground.toInt() }.toFloat()
 
     // splice the first four values (most used apps)
-    val firstFiveValues =
+    val firstFourValues =
         appUsageStatsInfoList.take(4).map { it.totalTimeInForeground.toFloat() }
             .toMutableList()
 
     // get  the sum of the other values after first four
-    val sumOfValuesAfterFirstFive =
+    val sumOfValuesAfterFirstFour =
         appUsageStatsInfoList.drop(4).sumOf { it.totalTimeInForeground.toInt() }.toFloat()
 
     // list of first five and sum of others
-    firstFiveValues.add(sumOfValuesAfterFirstFive)
+    firstFourValues.add(sumOfValuesAfterFirstFour)
 
     val colors = listOf(
         Color.Red.copy(green = .7f),
@@ -140,11 +143,26 @@ private fun UsageListScreen(
     )
 
     // generate pairs for each value and the corresponding colors
-    val statsWithColors = firstFiveValues zip colors
+    val statsWithColors = firstFourValues zip colors
 
     // map out values
     val plotValues = statsWithColors.map { statInfo ->
         statInfo.first * 100 / sumOfAllValues
+    }
+
+    val animateArcValue = remember {
+        Animatable(0f)
+    }
+
+    LaunchedEffect(key1 = plotValues) {
+        animateArcValue.animateTo(
+            targetValue = 1f,
+            animationSpec = tween(
+                durationMillis = 1000,
+                delayMillis = 1000,
+                easing = EaseInOut
+            )
+        )
     }
 
     val angles = plotValues.map { angleValue ->
@@ -184,7 +202,7 @@ private fun UsageListScreen(
                         drawArc(
                             color = statsWithColors.map { it.second }[i],
                             startAngle = startAngle,
-                            sweepAngle = angles[i],
+                            sweepAngle = angles[i] * animateArcValue.value,
                             useCenter = false,
                             style = Stroke(
                                 width = 16.dp.value,
