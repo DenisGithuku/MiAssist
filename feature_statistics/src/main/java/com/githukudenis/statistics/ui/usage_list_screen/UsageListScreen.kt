@@ -114,48 +114,63 @@ private fun UsageListScreen(
 ) {
     val context = LocalContext.current
     val applicationInfoMapper = ApplicationInfoMapper(context)
+
+    // get total time in foreground list values
+    val sumOfAllValues =
+        appUsageStatsInfoList.sumOf { it.totalTimeInForeground.toInt() }.toFloat()
+
+    // splice the first four values (most used apps)
+    val firstFiveValues =
+        appUsageStatsInfoList.take(4).map { it.totalTimeInForeground.toFloat() }
+            .toMutableList()
+
+    // get  the sum of the other values after first four
+    val sumOfValuesAfterFirstFive =
+        appUsageStatsInfoList.drop(4).sumOf { it.totalTimeInForeground.toInt() }.toFloat()
+
+    // list of first five and sum of others
+    firstFiveValues.add(sumOfValuesAfterFirstFive)
+
+    val colors = listOf(
+        Color.Red.copy(green = .7f),
+        Color.Green.copy(red = .7f),
+        Color.LightGray,
+        Color.Black.copy(alpha = .7f),
+        Color.Yellow.copy(green = .7f)
+    )
+
+    // generate pairs for each value and the corresponding colors
+    val statsWithColors = firstFiveValues zip colors
+
+    // map out values
+    val plotValues = statsWithColors.map { statInfo ->
+        statInfo.first * 100 / sumOfAllValues
+    }
+
+    val angles = plotValues.map { angleValue ->
+        angleValue * 360f / 100
+    }
+
     LazyColumn(
         modifier = modifier
             .fillMaxSize()
             .padding(vertical = 16.dp, horizontal = 8.dp)
     ) {
         item {
-            // get total time in foreground list values
-            val sumOfAllValues =
-                appUsageStatsInfoList.sumOf { it.totalTimeInForeground.toInt() }.toFloat()
-
-            // splice the first four values (most used apps)
-            val firstFiveValues =
-                appUsageStatsInfoList.take(4).map { it.totalTimeInForeground.toFloat() }
-                    .toMutableList()
-
-            // get  the sum of the other values after first four
-            val sumOfValuesAfterFirstFive =
-                appUsageStatsInfoList.drop(4).sumOf { it.totalTimeInForeground.toInt() }.toFloat()
-
-            // list of first five and sum of others
-            firstFiveValues.add(sumOfValuesAfterFirstFive)
-
-            val colors = listOf(
-                Color.Red.copy(green = .7f),
-                Color.Green.copy(red = .7f),
-                Color.LightGray,
-                Color.Black.copy(alpha = .7f),
-                Color.Yellow.copy(green = .7f)
-            )
-
-            // generate pairs for each value and the corresponding colors
-            val statsWithColors = firstFiveValues zip colors
-
-            // map out values
-            val plotValues = statsWithColors.map { statInfo ->
-                statInfo.first * 100 / sumOfAllValues
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = "Screen time"
+                )
+                Spacer(modifier = Modifier.height(12.dp))
+                Text(
+                    text = applicationInfoMapper.getTimeFromMillis(sumOfAllValues.toLong())
+                )
             }
-
-            val angles = plotValues.map { angleValue ->
-                angleValue * 360f / 100
-            }
-
+        }
+        item {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
