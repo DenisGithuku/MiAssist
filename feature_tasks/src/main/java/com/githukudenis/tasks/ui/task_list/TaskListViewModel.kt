@@ -62,6 +62,9 @@ class TaskListViewModel @Inject constructor(
                     }
                 }
             }
+            is TaskListEvent.RefreshTasks -> {
+                refreshTasks()
+            }
         }
     }
 
@@ -98,5 +101,9 @@ class TaskListViewModel @Inject constructor(
                 taskEntity
             )
         }
+    }
+
+    fun refreshTasks() {
+        getAllTodos()
     }
 }
