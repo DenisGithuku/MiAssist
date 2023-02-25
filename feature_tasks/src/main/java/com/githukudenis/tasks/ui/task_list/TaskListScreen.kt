@@ -10,33 +10,25 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.flowWithLifecycle
 import com.denisgithuku.tasks.data.local.Priority
 import com.denisgithuku.tasks.data.local.TaskEntity
 import com.denisgithuku.tasks.task_list.components.TaskCard
+import com.githukudenis.core_data.util.rememberLifecycleEvent
 import com.githukudenis.tasks.R
 import com.githukudenis.tasks.ui.task_list.components.DropdownItemSelectionChip
 import com.githukudenis.tasks.util.OrderType
 import com.githukudenis.tasks.util.SortType
 
 @OptIn(
-    ExperimentalMaterial3Api::class,
     ExperimentalAnimationApi::class,
     ExperimentalAnimationApi::class
 )
@@ -47,14 +39,15 @@ fun TaskListScreen(
     onOpenTodoDetails: (Long) -> Unit
 ) {
     val taskListViewModel: TaskListViewModel = hiltViewModel()
-    val lifecycleOwner = LocalLifecycleOwner.current
-    val viewModelState = remember(taskListViewModel.state, lifecycleOwner) {
-        taskListViewModel.state.flowWithLifecycle(lifecycleOwner.lifecycle, Lifecycle.State.STARTED)
+    val lifecycleEvent = rememberLifecycleEvent()
+    val viewModelState by taskListViewModel.state.collectAsState()
+    LaunchedEffect(key1 = lifecycleEvent) {
+        taskListViewModel.onEvent(TaskListEvent.RefreshTasks)
     }
-    val screenState by viewModelState.collectAsState(initial = TaskListUiState())
+
     val context = LocalContext.current
-    val showEmptyTasksMessage = remember(screenState) {
-        mutableStateOf(screenState.tasks.isEmpty())
+    val showEmptyTasksMessage = remember(viewModelState) {
+        mutableStateOf(viewModelState.tasks.isEmpty())
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -63,8 +56,8 @@ fun TaskListScreen(
                 .padding(12.dp)
         ) {
             SortOrderTaskSection(
-                selectedSortType = screenState.selectedSortType,
-                selectedOrderType = screenState.selectedOrderType,
+                selectedSortType = viewModelState.selectedSortType,
+                selectedOrderType = viewModelState.selectedOrderType,
                 onChangeSortType = { sortType ->
                     taskListViewModel.onEvent(TaskListEvent.ChangeSortType(sortType))
                 },
@@ -73,7 +66,7 @@ fun TaskListScreen(
                 }
             )
             FilterTaskSection(
-                selectedPriority = screenState.selectedPriority,
+                selectedPriority = viewModelState.selectedPriority,
                 onFilterByPriority = { priority ->
                     taskListViewModel.onEvent(TaskListEvent.ChangePriorityFilter(priority = priority))
                 }
@@ -88,7 +81,7 @@ fun TaskListScreen(
                     )
                 } else {
                     TaskList(
-                        todoList = screenState.tasks,
+                        todoList = viewModelState.tasks,
                         onOpenTodoDetails = onOpenTodoDetails,
                         onToggleCompleteTask = { taskId ->
                             taskListViewModel.onEvent(TaskListEvent.ToggleCompleteTask(taskId))
