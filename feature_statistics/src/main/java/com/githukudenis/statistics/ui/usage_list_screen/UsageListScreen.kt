@@ -3,7 +3,7 @@ package com.githukudenis.statistics.ui.usage_list_screen
 import android.content.Intent
 import android.provider.Settings
 import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.EaseInOut
+import androidx.compose.animation.core.EaseOut
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
@@ -90,10 +90,11 @@ fun UsageListScreen(
                 CircularProgressIndicator()
                 Spacer(modifier = Modifier.height(10.dp))
                 Text(
-                    text = "Loading apps..."
+                    text = "Loading app usage..."
                 )
             }
         }
+        return
     }
 
     if (screenState.userMessages.isNotEmpty()) {
@@ -104,6 +105,7 @@ fun UsageListScreen(
             )
             usageScreenListViewModel.onEvent(UsageScreenListEvent.OnShowUserMessage(userMessage = userMessage))
         }
+        return
     }
     UsageListScreen(
         appUsageStatsInfoList = screenState.data
@@ -159,8 +161,8 @@ private fun UsageListScreen(
             targetValue = 1f,
             animationSpec = tween(
                 durationMillis = 1000,
-                delayMillis = 1000,
-                easing = EaseInOut
+                delayMillis = 0,
+                easing = EaseOut
             )
         )
     }
@@ -201,8 +203,8 @@ private fun UsageListScreen(
                     for (i in angles.indices) {
                         drawArc(
                             color = statsWithColors.map { it.second }[i],
-                            startAngle = startAngle,
-                            sweepAngle = angles[i] * animateArcValue.value,
+                            startAngle = startAngle * animateArcValue.value,
+                            sweepAngle = angles[i],
                             useCenter = false,
                             style = Stroke(
                                 width = 16.dp.value,
