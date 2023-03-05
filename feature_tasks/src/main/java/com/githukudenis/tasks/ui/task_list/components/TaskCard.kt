@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -28,6 +29,26 @@ fun TaskCard(
     onToggleCompleteTask: (Long) -> Unit,
     taskEntity: TaskEntity
 ) {
+    var day = 0
+    var month = 0
+
+    taskEntity.taskDueDate?.let {
+        day = it.dayOfMonth
+        return@let day
+    }
+
+    taskEntity.taskDueDate?.let {
+        month = it.month.value
+        return@let month
+    }
+    val taskStatusColor =
+        if (month >= LocalDate.now().month.value && day > LocalDate.now().dayOfMonth + 3) {
+            Color.Green
+        } else if (month >= LocalDate.now().month.value && day >= LocalDate.now().dayOfMonth) {
+            Color(0xFFF7C901)
+        } else {
+            Color.Red
+        }
     val dueDate = remember(taskEntity.taskDueDate) {
         when (taskEntity.taskDueDate?.dayOfMonth) {
             LocalDate.now().dayOfMonth - 1 -> {
@@ -43,7 +64,10 @@ fun TaskCard(
             }
 
             else -> {
-                "${taskEntity.taskDueDate!!.month.name.lowercase().replaceFirstChar { firstChar -> firstChar.uppercaseChar() }} ${taskEntity.taskDueDate.dayOfMonth}"
+                "${
+                    taskEntity.taskDueDate!!.month.name.lowercase()
+                        .replaceFirstChar { firstChar -> firstChar.uppercaseChar() }
+                } ${taskEntity.taskDueDate.dayOfMonth}"
             }
         }
     }
@@ -53,16 +77,15 @@ fun TaskCard(
     }
 
     Row(
-        modifier = modifier.fillMaxWidth().clickable { onOpenTodoDetails(taskEntity.taskId ?: return@clickable) }
+        modifier = modifier
+            .clickable { onOpenTodoDetails(taskEntity.taskId ?: return@clickable) }
+            .fillMaxWidth()
             .padding(12.dp),
         horizontalArrangement = Arrangement.spacedBy(4.dp)
     ) {
-        RadioButton(
-            selected = taskEntity.completed,
-            onClick = {
-                onToggleCompleteTask(taskEntity.taskId ?: return@RadioButton)
-            }
-        )
+        RadioButton(selected = taskEntity.completed, onClick = {
+            onToggleCompleteTask(taskEntity.taskId ?: return@RadioButton)
+        })
         Column(
             modifier = modifier,
             verticalArrangement = Arrangement.spacedBy(12.dp)
@@ -87,7 +110,7 @@ fun TaskCard(
                     .border(
                         border = BorderStroke(
                             width = 1.dp,
-                            color = MaterialTheme.colorScheme.primary
+                            color = taskStatusColor
                         ),
                         shape = CircleShape
                     )
@@ -99,7 +122,7 @@ fun TaskCard(
                     style = MaterialTheme.typography.labelMedium.copy(
                         textDecoration = if (taskEntity.completed) TextDecoration.LineThrough else TextDecoration.None
                     ),
-                    color = MaterialTheme.colorScheme.primary
+                    color = taskStatusColor
                 )
             }
         }
@@ -129,7 +152,7 @@ fun TaskCardPreviewLight() {
 @Preview(
     name = "dark",
     showBackground = true,
-    uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL
+    uiMode = Configuration.UI_MODE_NIGHT_YES
 )
 @Composable
 fun TaskCardPreviewDark() {
