@@ -65,8 +65,8 @@ fun TaskCard(
 
             else -> {
                 "${
-                    taskEntity.taskDueDate!!.month.name.lowercase()
-                        .replaceFirstChar { firstChar -> firstChar.uppercaseChar() }
+                taskEntity.taskDueDate!!.month.name.lowercase()
+                    .replaceFirstChar { firstChar -> firstChar.uppercaseChar() }
                 } ${taskEntity.taskDueDate.dayOfMonth}"
             }
         }
