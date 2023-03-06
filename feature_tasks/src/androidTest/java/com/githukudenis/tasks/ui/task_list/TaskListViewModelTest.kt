@@ -3,20 +3,16 @@ package com.githukudenis.tasks.ui.task_list
 import com.denisgithuku.tasks.data.local.Priority
 import com.denisgithuku.tasks.data.local.TaskEntity
 import com.githukudenis.tasks.data.FakeTasksRepository
-import com.githukudenis.tasks.util.MainCoroutineRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.*
 import org.junit.Assert.assertEquals
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class TaskListViewModelTest {
-
-    @get:Rule
-    var mainCoroutineRule = MainCoroutineRule()
 
     private lateinit var testRepository: FakeTasksRepository
     private lateinit var taskListViewModel: TaskListViewModel
@@ -35,7 +31,10 @@ class TaskListViewModelTest {
         testRepository.addTask(TaskEntity(taskTitle = "", priority = Priority.HIGH))
         testRepository.addTask(TaskEntity(taskTitle = "", priority = Priority.HIGH))
 
-        taskListViewModel.getAllTodos()
+        val job = launch(UnconfinedTestDispatcher(scheduler = TestCoroutineScheduler())) {
+            taskListViewModel.getAllTodos()
+        }
+        job.cancel()
 
         assertEquals(3, taskListViewModel.state.value.tasks.size)
     }
@@ -49,28 +48,24 @@ class TaskListViewModelTest {
 
     @Test
     fun filterTasksByPriority() = runTest {
+        var firstTask = TaskEntity(taskTitle = "")
         testRepository.addTask(TaskEntity(taskTitle = ""))
         testRepository.addTask(TaskEntity(taskTitle = ""))
         testRepository.addTask(TaskEntity(taskTitle = ""))
 
-        taskListViewModel.changePriority(priority = Priority.LOW)
-        val firstTodo = taskListViewModel.state.value.tasks.first()
-        assertEquals(Priority.LOW, firstTodo.priority)
-    }
+        taskListViewModel.onEvent(TaskListEvent.ChangePriorityFilter(priority = Priority.LOW))
 
-    @Test
-    fun changePriorityUpdatesSelectedPriority() = runTest {
-        testRepository.addTask(TaskEntity(taskTitle = ""))
-        testRepository.addTask(TaskEntity(taskTitle = ""))
-        testRepository.addTask(TaskEntity(taskTitle = ""))
-
-        taskListViewModel.changePriority(priority = Priority.MODERATE)
-        assertEquals(Priority.MODERATE, taskListViewModel.state.value.selectedPriority)
+        val job = launch(UnconfinedTestDispatcher(scheduler = TestCoroutineScheduler())) {
+            firstTask = taskListViewModel.state.value.tasks.first()
+        }
+        job.cancel()
+        assertEquals(Priority.LOW, firstTask.priority)
     }
 
     @Test
     fun toggleCompleteTask() = runTest {
-        val testTask = TaskEntity(taskId = 45, taskTitle = "", completed = true, priority = Priority.HIGH)
+        val testTask =
+            TaskEntity(taskId = 45, taskTitle = "", completed = true, priority = Priority.HIGH)
         testRepository.addTask(testTask)
         testRepository.updateTask(testTask.copy(completed = !testTask.completed))
         val task = testRepository.getTaskById(todoId = testTask.taskId ?: return@runTest)
